@@ -1,3 +1,10 @@
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+        .tools {
+            margin-top: 10px;
+        }
 @-webkit-keyframes rotate-forever {
   0% {
     -webkit-transform: rotate(0deg);
