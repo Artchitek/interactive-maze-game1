@@ -2,6 +2,15 @@
 <html lang="en-US">
 <head>
     <meta charset="UTF-8"/>
+      <style>
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+        .tools {
+            margin-top: 10px;
+        }
+    </style>
     <script type="text/javascript">
     (window.NREUM || (NREUM = {})).init = {
         ajax: {
@@ -1900,6 +1909,15 @@
         "></script>
 </head>
 <body class="transition-enabled">
+     <h1>Interactive Maze Game</h1>
+    <canvas id="mazeCanvas" width="800" height="600"></canvas>
+    <div class="tools">
+        <button onclick="setMode('draw')">Draw</button>
+        <button onclick="setMode('erase')">Erase</button>
+        <label for="size">Size:</label>
+        <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
+    </div>
+    <script src="maze.js"></script>
     <div class='page-background-video page-background-video-with-panel'></div>
     <div class="js-responsive-nav">
         <div class="responsive-nav">
