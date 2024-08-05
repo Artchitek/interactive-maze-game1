@@ -9,7 +9,7 @@ window.onload = function() {
 
     // Load the maze image
     const mazeImage = new Image();
-    mazeImage.src = 'images/maze.png'; // Path to your image file
+    mazeImage.src = 'data:image/png;base64,iVBORw0...'; // Replace with your base64 string
     mazeImage.onload = function() {
         ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
     };
@@ -61,3 +61,4 @@ window.onload = function() {
         size = newSize;
     };
 };
+
