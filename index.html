@@ -2,6 +2,53 @@
 <html lang="en-US">
 <head>
     <meta charset="UTF-8"/>
+    <style>
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    background-color: #f0f8ff;
+    text-align: center;
+}
+
+h1 {
+    color: #ff4500;
+}
+
+/* Canvas-specific styles */
+.canvas-wrapper canvas {
+    border: 3px solid #ffa07a;
+    cursor: none; /* Hide default cursor */
+    background-image: url(Images/maze1.png);    
+    background-size: cover; /* Resize background image to cover the container */
+    background-position: center; /* Center the image within the container */
+    background-repeat: no-repeat; /* Prevent repeating the image */
+}
+
+.canvas-wrapper .tools {
+    margin-top: 10px;
+}
+
+.canvas-wrapper .tool-button {
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.canvas-wrapper .tool-button:hover {
+    background-color: #ff4500;
+}
+
+.canvas-wrapper .cursor {
+    position: absolute;
+    background-color: #ff4500;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+    </style>
     <script type="text/javascript">
     (window.NREUM || (NREUM = {})).init = {
         ajax: {
@@ -1887,10 +1934,13 @@
     <meta name="keywords" content="ChildrensBooks, KidsEmotions, EmpathyForKids, FriendshipStories, CareerEducation, ArchitectForKids, IllustratedBooks, TeachingEmotions, KidsCareerBooks, UnderstandingFeelings, ChildrensStorytelling, CareerExploration, EmotionalIntelligence, LearningAboutJobs, KidsLiterature">
     <link rel="icon" href="https://cdn.myportfolio.com/32131c10-70c7-499e-850a-051ff248f3fb/8501715b-cc96-4301-a67e-c5199c83f274_carw_1x1x32.jpg?h=3e340764ab449d7318a6123f519826c9"/>
     <link rel="apple-touch-icon" href="https://cdn.myportfolio.com/32131c10-70c7-499e-850a-051ff248f3fb/d7596eca-d412-422e-aadd-9de31f94c927_carw_1x1x180.jpg?h=ff97e1730fcc4f7660e15d746b854aa0"/>
-    <link rel="stylesheet" href="/dist/css/main.css" type="text/css"/>
+    <link rel="stylesheet" href="/Styles/main.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdn.myportfolio.com/32131c10-70c7-499e-850a-051ff248f3fb/ec832dd0f8c886c466ac11eb3eea5c091722895199.css?h=af0fb5fb2786a84ef4aeeb32c083720c" type="text/css"/>
     <link rel="canonical" href="https://misterpbooks.com/nilos-classic-games"/>
+    <link rel="stylesheet" href="/Styles/canvas.css" type="text/css"/>
     <title>Mister P Books - Nilo's Classic Games</title>
+    <script src="Scripts/main.js"></script>
+    <script src="Scripts/maze.js"></script>
     <script type="text/javascript" src="//use.typekit.net/ik/hFuZjbcw1zgxTeS6LZFwMgEPu3-2JJQkWGkqUmNG5atfelwgfHYEBsJzwD9oFDIDWhIoFDwUZAjkFQJtZRZRFh9XFcIa5AwhwQMUFAZRjRsqZeZcjcJoZAJ-MfJIjcT3ZkJIZ1s0-kJISAi0pfJIp1FcpPGHfH_JMsMMeMb6MKGHfOWJMsMMeMj6MKGHfHnJMsMMeMq6MKG4fJgmIMIj2kMfH6qJyB9bMs6IJMJ7fbRxmgMgeM96MKG4fJBmIMIjgkMfH6qJyu9bMs6JJMJ7f6R76MJbMy6YJMJ7fbKOFUM2eMb6MKG4fJXaIMwjgkMfqMeAcN7Xg6.js?cb=bf984b713e9fee55eda2fc9c68beabe2f6343c79" async onload="
         try {
           window.Typekit.load();
@@ -1900,15 +1950,6 @@
         "></script>
 </head>
 <body class="transition-enabled">
-     <h1>Interactive Maze Game</h1>
-    <canvas id="mazeCanvas" width="800" height="600"></canvas>
-    <div class="tools">
-        <button onclick="setMode('draw')">Draw</button>
-        <button onclick="setMode('erase')">Erase</button>
-        <label for="size">Size:</label>
-        <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
-    </div>
-    <script src="maze.js"></script>
     <div class='page-background-video page-background-video-with-panel'></div>
     <div class="js-responsive-nav">
         <div class="responsive-nav">
@@ -1989,24 +2030,24 @@
                     </header>
                     <nav data-hover-hint="nav">
                         <div class="page-title">
-                            <a href="/home">Home</a>
+                            <a href="https://misterpbooks.com/home">Home</a>
                         </div>
                         <ul class="group">
                             <li class="gallery-title">
-                                <a href="/work">Books</a>
+                                <a href="https://misterpbooks.com/work">Books</a>
                             </li>
                         </ul>
                         <div class="page-title">
-                            <a href="/games">Games</a>
+                            <a href="https://misterpbooks.com/games">Games</a>
                         </div>
                         <div class="page-title">
-                            <a href="/nilos-classic-games" class="active">Nilo's Classic Games</a>
+                            <a href="https://misterpbooks.com/nilos-classic-games" class="active">Nilo's Classic Games</a>
                         </div>
                         <div class="page-title">
-                            <a href="/about-mister-p">About Mister P</a>
+                            <a href="https://misterpbooks.com/about-mister-p">About Mister P</a>
                         </div>
                         <div class="page-title">
-                            <a href="/contact">Contact</a>
+                            <a href="https://misterpbooks.com/contact">Contact</a>
                         </div>
                     </nav>
                 </div>
@@ -2039,6 +2080,25 @@
                             </svg>
                         </a>
                     </div>
+                    <h1>Interactive Maze Game</h1>
+                    <div class="canvas-wrapper">
+                        <!-- Canvas element -->
+                        <canvas id="mazeCanvas" width="800" height="600"></canvas>
+                        
+                        <!-- Tools related to the canvas -->
+                        <div class="tools">
+                            <button class="tool-button" onclick="setMode('draw')">Draw</button>
+                            <button class="tool-button" onclick="setMode('erase')">Erase</button>
+                            <label for="size">Size:</label>
+                            <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
+                            <button class="tool-button" onclick="clearCanvas()">Clear</button>
+                            <button class="tool-button" onclick="toggleFullScreen()">Full Screen</button>
+                        </div>
+                        
+                        <!-- Custom cursor element -->
+                        <div class="cursor"></div>
+                    </div>
+    <script src="Scripts/maze.js"></script>
                     <footer class="site-footer" data-hover-hint="footer">
                         <div class="social pf-footer-social" data-context="theme.footer" data-hover-hint="footerSocialIcons">
                             <ul></ul>
