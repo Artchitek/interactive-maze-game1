@@ -60,6 +60,7 @@ window.onload = function() {
     }
 
     function startDrawing(e) {
+        e.preventDefault(); // Prevent default touch behavior
         drawing = true;
         draw(e); // To draw a point at the starting position
     }
@@ -104,7 +105,8 @@ window.onload = function() {
         offScreenCtx.moveTo(x, y);
     }
 
-    function stopDrawing() {
+    function stopDrawing(e) {
+        e.preventDefault(); // Prevent default touch behavior
         drawing = false;
         ctx.beginPath(); // Reset the path
         offScreenCtx.beginPath(); // Reset the path on off-screen canvas
@@ -216,10 +218,10 @@ window.onload = function() {
     });
 
     // Add touch event listeners for drawing
-    canvas.addEventListener('touchstart', startDrawing);
-    canvas.addEventListener('touchmove', draw);
-    canvas.addEventListener('touchend', stopDrawing);
-    canvas.addEventListener('touchcancel', stopDrawing);
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing, { passive: false });
+    canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
 
     // Show the initial intro video
     introVideo.play();
