@@ -1,0 +1,41 @@
+/* General body styles (not specific to canvas) */
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    background-color: #f0f8ff;
+    text-align: center;
+}
+
+h1 {
+    color: #ff4500;
+}
+
+/* Canvas-specific styles */
+.canvas-wrapper canvas {
+    border: 3px solid #ffa07a;
+    cursor: none; /* Hide default cursor */
+}
+
+.canvas-wrapper .tools {
+    margin-top: 10px;
+}
+
+.canvas-wrapper .tool-button {
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.canvas-wrapper .tool-button:hover {
+    background-color: #ff4500;
+}
+
+.canvas-wrapper .cursor {
+    position: absolute;
+    background-color: #ff4500;
+    border-radius: 50%;
+    pointer-events: none;
+}
