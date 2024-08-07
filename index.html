@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <style>
-         body, html {
+        body, html {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
             background-color: #ffebcc;
@@ -12,12 +12,12 @@
             overflow-x: hidden;
         }
         #gameContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
         .canvas-container {
             display: none; /* Hide canvas initially */
             position: relative;
@@ -113,75 +113,65 @@
             justify-content: center;
             z-index: 1000;
         }
-
         #congratulationsContent {
             background: #fff;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
         }
-
         #congratulationsContent h1 {
             color: #4caf50;
         }
-
         #congratulationsContent p {
             margin: 20px 0;
         }
-
-#continueButton {
-    padding: 10px 20px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-#continueButton:hover {
-    background-color: #45a049;
-}
-#toolsContainer {
-    margin: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-}
-
-#toolsContainer label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-#size, #color {
-    margin-bottom: 10px;
-    display: block;
-}
-
-#size {
-    width: 100%;
-}
-
-#color {
-    width: 100%;
-    padding: 0;
-}
-#fullscreenButton {
-    padding: 10px 20px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 10px;
-}
-
-#fullscreenButton:hover {
-    background-color: #45a049;
-}
+        #continueButton {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #continueButton:hover {
+            background-color: #45a049;
+        }
+        #toolsContainer {
+            margin: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        #toolsContainer label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        #size, #color {
+            margin-bottom: 10px;
+            display: block;
+        }
+        #size {
+            width: 100%;
+        }
+        #color {
+            width: 100%;
+            padding: 0;
+        }
+        #fullscreenButton {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        #fullscreenButton:hover {
+            background-color: #45a049;
+        }
         /* Animation styles */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -2248,34 +2238,31 @@
                             <div id="progress"></div>
                         </div>
                         <div id="gameContainer">
-                        <div class="canvas-container" id="canvasContainer">
-                            <canvas id="mazeCanvas"></canvas>
-                            <div class="tools" id="toolsContainer">
-                                <button onclick="setMode('draw')">Draw</button>
-                                <button onclick="clearCanvas()">Clear</button>
-                                <label for="size">Brush Size:</label>
-                                <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
-                                <label for="color">Brush Color:</label>
-                                <input type="color" id="colorPicker" value="#ff4081">
+                            <div class="canvas-container" id="canvasContainer">
+                                <canvas id="mazeCanvas"></canvas>
+                                <div class="tools" id="toolsContainer">
+                                    <button onclick="setMode('draw')">Draw</button>
+                                    <button onclick="clearCanvas()">Clear</button>
+                                    <label for="size">Brush Size:</label>
+                                    <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
+                                    <label for="color">Brush Color:</label>
+                                    <input type="color" id="colorPicker" value="#ff4081">
+                                </div>
+                                <div class="navigation">
+                                    <button id="prevButton" onclick="prevMaze()">Previous</button>
+                                    <button id="nextButton" onclick="nextMaze()">Next</button>
+                                    <button id="fullscreenButton">Go Fullscreen</button>
+                                </div>
                             </div>
-                            <div class="navigation">
-                                <button id="prevButton" onclick="prevMaze()">Previous</button>
-                                <button id="nextButton" onclick="nextMaze()">Next</button>
-                                  <!-- Fullscreen Button -->
-                                <button id="fullscreenButton">Go Fullscreen</button>
                         </div>
-                        </div>
-                            </div>
-                          
-
                         <!-- Congratulations Message -->
-<div id="congratulationsPage" style="display: none;">
-    <div id="congratulationsContent">
-        <h1>Congratulations!</h1>
-        <p>You’ve completed this level! Well done!</p>
-        <button id="continueButton">Continue to Next Maze</button>
-    </div>
-</div>
+                        <div id="congratulationsPage" style="display: none;">
+                            <div id="congratulationsContent">
+                                <h1>Congratulations!</h1>
+                                <p>You’ve completed this level! Well done!</p>
+                                <button id="continueButton">Continue to Next Maze</button>
+                            </div>
+                        </div>
                         <script src="Scripts/maze.js"></script>
                     </body>
   
