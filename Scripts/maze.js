@@ -14,6 +14,10 @@ window.onload = function() {
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
+    // Color picker 
+    const colorPicker = document.getElementById('colorPicker');
+    let isDrawing = false;
+    let brushColor = colorPicker.value; // Default brush color
 
     let drawing = false;
     let size = sizeInput.value;
@@ -116,6 +120,11 @@ window.onload = function() {
     window.setSize = function(newSize) {
         size = newSize;
     };
+
+    // Event listener for color picker
+colorPicker.addEventListener('input', (e) => {
+    brushColor = e.target.value; // Update brush color
+});
 
     // Clear the canvas
     window.clearCanvas = function() {
