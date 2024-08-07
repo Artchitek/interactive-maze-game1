@@ -59,12 +59,6 @@ window.onload = function() {
         loadMaze(currentMazeIndex);
     }
 
-    // Event listeners for mouse actions
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
-
     function startDrawing(e) {
         drawing = true;
         draw(e); // To draw a point at the starting position
@@ -77,8 +71,19 @@ window.onload = function() {
         const scaleX = canvas.width / rect.width; // Scaling factor for X
         const scaleY = canvas.height / rect.height; // Scaling factor for Y
 
-        const x = (e.clientX - rect.left) * scaleX;
-        const y = (e.clientY - rect.top) * scaleY;
+        let x, y;
+
+        // Detect if the event is a touch or mouse event
+        if (e.touches) {
+            // Handle touch event
+            const touch = e.touches[0];
+            x = (touch.clientX - rect.left) * scaleX;
+            y = (touch.clientY - rect.top) * scaleY;
+        } else {
+            // Handle mouse event
+            x = (e.clientX - rect.left) * scaleX;
+            y = (e.clientY - rect.top) * scaleY;
+        }
 
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
@@ -209,6 +214,12 @@ window.onload = function() {
             fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
         }
     });
+
+    // Add touch event listeners for drawing
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchcancel', stopDrawing);
 
     // Show the initial intro video
     introVideo.play();
