@@ -14,9 +14,11 @@ window.onload = function() {
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
+    const colorPicker = document.getElementById('colorPicker');
 
     let drawing = false;
     let size = sizeInput.value;
+    let currentColor = colorPicker.value; // Initial color
     let currentMazeIndex = 0;
 
     // Maze images array
@@ -34,30 +36,23 @@ window.onload = function() {
     const offScreenCanvas = document.createElement('canvas');
     const offScreenCtx = offScreenCanvas.getContext('2d');
 
-    // Detect if the user is on a mobile device
-    function isMobileDevice() {
-        return /Mobi|Android/i.test(navigator.userAgent);
-    }
-
     // Update status bar width based on video progress
     introVideo.addEventListener('timeupdate', function() {
         const percent = (introVideo.currentTime / introVideo.duration) * 100;
         progress.style.width = percent + '%';
         if (percent >= 100) {
-            if (isMobileDevice()) {
-                showMaze();
-            } else {
-                // For non-mobile devices, show the maze after the video ends
-                showMaze();
-            }
+            showMaze();
         }
     });
 
     // Event listener to hide video and show canvas when video ends
     introVideo.addEventListener('ended', function() {
-        if (isMobileDevice()) {
-            showMaze();
-        }
+        showMaze();
+    });
+
+    // Update color when color picker value changes
+    colorPicker.addEventListener('input', function() {
+        currentColor = colorPicker.value;
     });
 
     function showMaze() {
@@ -100,7 +95,7 @@ window.onload = function() {
 
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
-        ctx.strokeStyle = '#ff4081'; // Drawing color
+        ctx.strokeStyle = currentColor; // Use current color
 
         ctx.lineTo(x, y);
         ctx.stroke();
@@ -110,7 +105,7 @@ window.onload = function() {
         // Draw to off-screen canvas as well
         offScreenCtx.lineWidth = size;
         offScreenCtx.lineCap = 'round';
-        offScreenCtx.strokeStyle = '#ff4081';
+        offScreenCtx.strokeStyle = currentColor; // Use current color
         offScreenCtx.lineTo(x, y);
         offScreenCtx.stroke();
         offScreenCtx.beginPath();
@@ -235,15 +230,13 @@ window.onload = function() {
     canvas.addEventListener('touchend', stopDrawing, { passive: false });
     canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
 
+    // Add mouse event listeners for drawing
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
     // Show the initial intro video
     introVideo.play();
-    statusBar.style.display = 'block';
-    loadingStatus.style.display = 'block';
-    canvasContainer.style.display = 'none';
-    toolsContainer.style.display = 'none';
-    prevButton.style.display = 'none';
-    nextButton.style.display = 'none';
-
-    // Load the first maze after the intro video
-    loadMaze(currentMazeIndex);
+    statusBar.style.display = 'block'; // Show status bar
 };
