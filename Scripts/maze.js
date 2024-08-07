@@ -18,6 +18,7 @@ window.onload = function() {
 
     let drawing = false;
     let size = sizeInput.value;
+    let currentColor = colorPicker.value; // Initial color
     let currentMazeIndex = 0;
 
     // Maze images array
@@ -47,6 +48,11 @@ window.onload = function() {
     // Event listener to hide video and show canvas when video ends
     introVideo.addEventListener('ended', function() {
         showMaze();
+    });
+
+    // Update color when color picker value changes
+    colorPicker.addEventListener('input', function() {
+        currentColor = colorPicker.value;
     });
 
     function showMaze() {
@@ -89,7 +95,7 @@ window.onload = function() {
 
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
-        ctx.strokeStyle = '#ff4081'; // Drawing color
+        ctx.strokeStyle = currentColor; // Use current color
 
         ctx.lineTo(x, y);
         ctx.stroke();
@@ -99,7 +105,7 @@ window.onload = function() {
         // Draw to off-screen canvas as well
         offScreenCtx.lineWidth = size;
         offScreenCtx.lineCap = 'round';
-        offScreenCtx.strokeStyle = '#ff4081';
+        offScreenCtx.strokeStyle = currentColor; // Use current color
         offScreenCtx.lineTo(x, y);
         offScreenCtx.stroke();
         offScreenCtx.beginPath();
@@ -117,12 +123,6 @@ window.onload = function() {
     window.setSize = function(newSize) {
         size = newSize;
     };
-
-        // Update color when color picker value changes
-    colorPicker.addEventListener('input', function() {
-        ctx.strokeStyle = colorPicker.value; // Update canvas color
-        offScreenCtx.strokeStyle = colorPicker.value; // Update off-screen canvas color
-    });
 
     // Clear the canvas
     window.clearCanvas = function() {
@@ -230,15 +230,13 @@ window.onload = function() {
     canvas.addEventListener('touchend', stopDrawing, { passive: false });
     canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
 
+    // Add mouse event listeners for drawing
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
     // Show the initial intro video
     introVideo.play();
-    statusBar.style.display = 'block';
-    loadingStatus.style.display = 'block';
-    canvasContainer.style.display = 'none';
-    toolsContainer.style.display = 'none';
-    prevButton.style.display = 'none';
-    nextButton.style.display = 'none';
-
-    // Load the first maze after the intro video
-    loadMaze(currentMazeIndex);
+    statusBar.style.display = 'block'; // Show status bar
 };
