@@ -14,229 +14,118 @@ window.onload = function() {
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
-    const colorPicker = document.getElementById('colorPicker');
+    const colorInput = document.getElementById('color');
 
     let drawing = false;
-    let size = sizeInput.value;
-    let currentColor = colorPicker.value; // Initial color
-    let currentMazeIndex = 0;
-
-    // Maze images array
-    const mazeImages = [
-        'Images/maze1.png',
-        'Images/maze2.png',
-        'Images/maze3.png',
-        'Images/maze4.png',
-        'Images/maze5.png'
-    ];
-
-    const mazeImage = new Image();
-
-    // Off-screen canvas for storing drawing content
-    const offScreenCanvas = document.createElement('canvas');
-    const offScreenCtx = offScreenCanvas.getContext('2d');
-
-    // Update status bar width based on video progress
-    introVideo.addEventListener('timeupdate', function() {
-        const percent = (introVideo.currentTime / introVideo.duration) * 100;
-        progress.style.width = percent + '%';
-        if (percent >= 100) {
-            showMaze();
-        }
+    let brushSize = sizeInput.value;
+    let brushColor = colorInput.value;
+    let mode = 'draw';
+    let currentIndex = 0;
+    const mazes = ['Images/maze1.png', 'Images/maze2.png', 'Images/maze3.png'];
+    
+    // Sync the brush color to the selected color from the color picker
+    colorInput.addEventListener('input', function() {
+        brushColor = this.value;
     });
 
-    // Event listener to hide video and show canvas when video ends
-    introVideo.addEventListener('ended', function() {
-        showMaze();
-    });
+    function resizeCanvas() {
+        const containerWidth = canvasContainer.clientWidth;
+        canvas.width = containerWidth;
+        canvas.height = containerWidth * 0.75; // Maintain aspect ratio
+        loadMaze(currentIndex);
+    }
 
-    // Update color when color picker value changes
-    colorPicker.addEventListener('input', function() {
-        currentColor = colorPicker.value;
-    });
+    function loadMaze(index) {
+        const img = new Image();
+        img.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        img.src = mazes[index];
+    }
 
-    function showMaze() {
-        statusBar.style.display = 'none'; // Hide status bar
-        loadingStatus.style.display = 'none'; // Hide loading status
-        introVideo.style.display = 'none'; // Hide video
-        canvasContainer.style.display = 'block'; // Show canvas
-        toolsContainer.style.display = 'block'; // Show tools
-        prevButton.style.display = 'inline-block'; // Show Previous button
-        nextButton.style.display = 'inline-block'; // Show Next button
-        loadMaze(currentMazeIndex);
+    function setSize(newSize) {
+        brushSize = newSize;
+    }
+
+    function setMode(newMode) {
+        mode = newMode;
     }
 
     function startDrawing(e) {
-        e.preventDefault(); // Prevent default touch behavior
         drawing = true;
-        draw(e); // To draw a point at the starting position
+        draw(e);
+    }
+
+    function endDrawing() {
+        drawing = false;
+        ctx.beginPath();
     }
 
     function draw(e) {
         if (!drawing) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width; // Scaling factor for X
-        const scaleY = canvas.height / rect.height; // Scaling factor for Y
-
-        let x, y;
-
-        // Detect if the event is a touch or mouse event
-        if (e.touches) {
-            // Handle touch event
-            const touch = e.touches[0];
-            x = (touch.clientX - rect.left) * scaleX;
-            y = (touch.clientY - rect.top) * scaleY;
-        } else {
-            // Handle mouse event
-            x = (e.clientX - rect.left) * scaleX;
-            y = (e.clientY - rect.top) * scaleY;
-        }
-
-        ctx.lineWidth = size;
+        ctx.lineWidth = brushSize;
         ctx.lineCap = 'round';
-        ctx.strokeStyle = currentColor; // Use current color
+        ctx.strokeStyle = brushColor;
 
-        ctx.lineTo(x, y);
+        ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(x, y);
-
-        // Draw to off-screen canvas as well
-        offScreenCtx.lineWidth = size;
-        offScreenCtx.lineCap = 'round';
-        offScreenCtx.strokeStyle = currentColor; // Use current color
-        offScreenCtx.lineTo(x, y);
-        offScreenCtx.stroke();
-        offScreenCtx.beginPath();
-        offScreenCtx.moveTo(x, y);
+        ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
     }
 
-    function stopDrawing(e) {
-        e.preventDefault(); // Prevent default touch behavior
-        drawing = false;
-        ctx.beginPath(); // Reset the path
-        offScreenCtx.beginPath(); // Reset the path on off-screen canvas
-    }
-
-    // Set tool size
-    window.setSize = function(newSize) {
-        size = newSize;
-    };
-
-    // Clear the canvas
-    window.clearCanvas = function() {
+    function clearCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height); // Redraw maze
-        offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height); // Clear off-screen canvas
-    };
-
-    // Align brush with mouse pointer
-    canvas.addEventListener('mouseenter', () => {
-        canvas.style.cursor = 'crosshair';
-    });
-
-    // Load maze image
-    function loadMaze(index, animation) {
-        mazeImage.src = mazeImages[index];
-        mazeImage.onload = function() {
-            canvas.width = mazeImage.width;
-            canvas.height = mazeImage.height;
-            offScreenCanvas.width = mazeImage.width;
-            offScreenCanvas.height = mazeImage.height;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
-
-            // Clear off-screen canvas as well
-            offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-
-            // Apply animation if provided
-            if (animation) {
-                canvas.classList.add(animation);
-                setTimeout(() => {
-                    canvas.classList.remove(animation);
-                }, 500); // Adjust duration as needed
-            }
-        };
-
-        // Update navigation buttons visibility
-        prevButton.style.display = index === 0 ? 'none' : 'inline-block';
-        nextButton.style.display = index === mazeImages.length - 1 ? 'none' : 'inline-block';
+        loadMaze(currentIndex);
     }
 
-    // Previous maze
-    window.prevMaze = function() {
-        if (currentMazeIndex > 0) {
-            showCongratulationsPage('prev');
-        }
-    };
-
-    // Next maze
-    window.nextMaze = function() {
-        if (currentMazeIndex < mazeImages.length - 1) {
-            showCongratulationsPage('next');
-        }
-    };
-
-    function showCongratulationsPage(direction) {
-        canvasContainer.style.display = 'none';
-        toolsContainer.style.display = 'none';
-        congratulationsPage.style.display = 'flex';
-
-        continueButton.onclick = function() {
-            congratulationsPage.style.display = 'none';
-            canvasContainer.style.display = 'block';
-            toolsContainer.style.display = 'block';
-            if (direction === 'next') {
-                currentMazeIndex++;
-                loadMaze(currentMazeIndex, 'fade-in');
-            } else if (direction === 'prev') {
-                currentMazeIndex--;
-                loadMaze(currentMazeIndex, 'fade-in');
-            }
-        };
-    }
-
-    // Fullscreen functionality
-    fullscreenButton.addEventListener('click', toggleFullscreen);
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            gameContainer.requestFullscreen().catch(err => {
-                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-            });
-        } else {
-            document.exitFullscreen();
+    function prevMaze() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            loadMaze(currentIndex);
         }
     }
 
-    // Handle fullscreen change
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-            canvas.style.width = '100%';
-            canvas.style.height = 'auto';
-            fullscreenButton.textContent = 'Exit Fullscreen'; // Update button text
-        } else {
-            canvas.style.width = '';
-            canvas.style.height = '';
-            fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
+    function nextMaze() {
+        if (currentIndex < mazes.length - 1) {
+            currentIndex++;
+            loadMaze(currentIndex);
         }
-    });
+    }
 
-    // Add touch event listeners for drawing
-    canvas.addEventListener('touchstart', startDrawing, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDrawing, { passive: false });
-    canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
+    function enterFullscreen() {
+        if (gameContainer.requestFullscreen) {
+            gameContainer.requestFullscreen();
+        } else if (gameContainer.mozRequestFullScreen) { // Firefox
+            gameContainer.mozRequestFullScreen();
+        } else if (gameContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            gameContainer.webkitRequestFullscreen();
+        } else if (gameContainer.msRequestFullscreen) { // IE/Edge
+            gameContainer.msRequestFullscreen();
+        }
+    }
 
-    // Add mouse event listeners for drawing
+    fullscreenButton.addEventListener('click', enterFullscreen);
     canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', endDrawing);
     canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
+    canvas.addEventListener('touchstart', (e) => startDrawing(e.touches[0]));
+    canvas.addEventListener('touchend', endDrawing);
+    canvas.addEventListener('touchmove', (e) => draw(e.touches[0]));
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    introVideo.addEventListener('ended', function() {
+        introVideo.style.display = 'none';
+        canvasContainer.style.display = 'block';
+        toolsContainer.style.display = 'block';
+        statusBar.style.display = 'block';
+        loadingStatus.style.display = 'block';
+        loadMaze(currentIndex);
+    });
 
-    // Show the initial intro video
-    introVideo.play();
-    statusBar.style.display = 'block'; // Show status bar
-};
+    continueButton.addEventListener('click', function() {
+        congratulationsPage.style.display = 'none';
+        nextMaze();
+    });
+}
