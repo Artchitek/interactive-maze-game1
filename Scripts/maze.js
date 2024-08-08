@@ -14,11 +14,9 @@ window.onload = function() {
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
-    const colorPicker = document.getElementById('colorPicker');
 
     let drawing = false;
     let size = sizeInput.value;
-    let currentColor = colorPicker.value; // Initial color
     let currentMazeIndex = 0;
 
     // Maze images array
@@ -28,6 +26,15 @@ window.onload = function() {
         'Images/maze3.png',
         'Images/maze4.png',
         'Images/maze5.png'
+    ];
+
+    // Fullscreen maze images array
+    const fullscreenMazeImages = [
+        'Images/maze1_large.jpg',
+        'Images/maze2_large.jpg',
+        'Images/maze3_large.jpg',
+        'Images/maze4_large.jpg',
+        'Images/maze5_large.jpg'
     ];
 
     const mazeImage = new Image();
@@ -48,11 +55,6 @@ window.onload = function() {
     // Event listener to hide video and show canvas when video ends
     introVideo.addEventListener('ended', function() {
         showMaze();
-    });
-
-    // Update color when color picker value changes
-    colorPicker.addEventListener('input', function() {
-        currentColor = colorPicker.value;
     });
 
     function showMaze() {
@@ -95,7 +97,7 @@ window.onload = function() {
 
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
-        ctx.strokeStyle = currentColor; // Use current color
+        ctx.strokeStyle = '#ff4081'; // Drawing color
 
         ctx.lineTo(x, y);
         ctx.stroke();
@@ -105,7 +107,7 @@ window.onload = function() {
         // Draw to off-screen canvas as well
         offScreenCtx.lineWidth = size;
         offScreenCtx.lineCap = 'round';
-        offScreenCtx.strokeStyle = currentColor; // Use current color
+        offScreenCtx.strokeStyle = '#ff4081';
         offScreenCtx.lineTo(x, y);
         offScreenCtx.stroke();
         offScreenCtx.beginPath();
@@ -138,7 +140,7 @@ window.onload = function() {
 
     // Load maze image
     function loadMaze(index, animation) {
-        mazeImage.src = mazeImages[index];
+        mazeImage.src = document.fullscreenElement ? fullscreenMazeImages[index] : mazeImages[index];
         mazeImage.onload = function() {
             canvas.width = mazeImage.width;
             canvas.height = mazeImage.height;
@@ -217,10 +219,12 @@ window.onload = function() {
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
             fullscreenButton.textContent = 'Exit Fullscreen'; // Update button text
+            loadMaze(currentMazeIndex); // Reload the maze with fullscreen image
         } else {
             canvas.style.width = '';
             canvas.style.height = '';
             fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
+            loadMaze(currentMazeIndex); // Reload the maze with normal image
         }
     });
 
@@ -236,7 +240,8 @@ window.onload = function() {
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
 
-    // Show the initial intro video
+    // Initial load
+    loadMaze(currentMazeIndex);
     introVideo.play();
     statusBar.style.display = 'block'; // Show status bar
     loadingStatus.style.display = 'block';
