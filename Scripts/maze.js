@@ -18,7 +18,7 @@ window.onload = function() {
 
     let drawing = false;
     let size = sizeInput.value;
-    let currentColor = colorPicker.value; // Initial color
+    let currentColor = colorPicker.value;
     let currentMazeIndex = 0;
 
     // Maze images array
@@ -92,19 +92,17 @@ window.onload = function() {
 
         // Detect if the event is a touch or mouse event
         if (e.touches) {
-            // Handle touch event
             const touch = e.touches[0];
             x = (touch.clientX - rect.left) * scaleX;
             y = (touch.clientY - rect.top) * scaleY;
         } else {
-            // Handle mouse event
             x = (e.clientX - rect.left) * scaleX;
             y = (e.clientY - rect.top) * scaleY;
         }
 
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
-        ctx.strokeStyle = currentColor; // Use current color
+        ctx.strokeStyle = currentColor;
 
         ctx.lineTo(x, y);
         ctx.stroke();
@@ -114,7 +112,7 @@ window.onload = function() {
         // Draw to off-screen canvas as well
         offScreenCtx.lineWidth = size;
         offScreenCtx.lineCap = 'round';
-        offScreenCtx.strokeStyle = currentColor; // Use current color
+        offScreenCtx.strokeStyle = currentColor;
         offScreenCtx.lineTo(x, y);
         offScreenCtx.stroke();
         offScreenCtx.beginPath();
@@ -122,7 +120,7 @@ window.onload = function() {
     }
 
     function stopDrawing(e) {
-        e.preventDefault(); // Prevent default touch behavior
+        e.preventDefault();
         drawing = false;
         ctx.beginPath(); // Reset the path
         offScreenCtx.beginPath(); // Reset the path on off-screen canvas
@@ -157,7 +155,6 @@ window.onload = function() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
 
-            // Clear off-screen canvas as well
             offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
 
             // Apply animation if provided
@@ -169,7 +166,6 @@ window.onload = function() {
             }
         };
 
-        // Update navigation buttons visibility
         prevButton.style.display = index === 0 ? 'none' : 'inline-block';
         nextButton.style.display = index === mazeImages.length - 1 ? 'none' : 'inline-block';
     }
@@ -177,11 +173,10 @@ window.onload = function() {
     // Previous maze
     window.prevMaze = function() {
         if (currentMazeIndex > 0) {
-        currentMazeIndex--; // Decrement the maze index
-        loadMaze(currentMazeIndex, 'fade-in'); // Load the previous maze with animation
-         }
+            currentMazeIndex--; // Decrement the maze index
+            loadMaze(currentMazeIndex, 'fade-in'); // Load the previous maze with animation
+        }
     };
-
 
     // Next maze
     window.nextMaze = function() {
@@ -209,115 +204,83 @@ window.onload = function() {
         };
     }
 
+    // Function to detect if the user is on an iOS device
+    function isIOS() {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
 
-
-// Function to detect if the user is on an iOS device
-function isIOS() {
-    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-// Function to toggle fullscreen mode
-function toggleFullscreen() {
-    if (isIOS()) {
-        // Simulate fullscreen by resizing the canvas to fit the screen
-        if (isFullscreen) {
-            // Exit fullscreen simulation
-            canvas.style.width = '';
-            canvas.style.height = '';
-            canvas.classList.remove('fullscreen-mode');
-            fullscreenButton.textContent = 'Go Fullscreen';
-            // Restore the maze image
-            loadImage(mazeImages[currentMazeIndex]);
+    // Toggle fullscreen mode
+    function toggleFullscreen() {
+        if (isIOS()) {
+            // Simulate fullscreen by resizing the canvas to fit the screen
+            if (!canvas.classList.contains('fullscreen-mode')) {
+                canvas.style.width = '100vw';
+                canvas.style.height = '100vh';
+                canvas.classList.add('fullscreen-mode');
+                fullscreenButton.textContent = 'Exit Fullscreen';
+                loadMaze(currentMazeIndex);
+            } else {
+                canvas.style.width = '';
+                canvas.style.height = '';
+                canvas.classList.remove('fullscreen-mode');
+                fullscreenButton.textContent = 'Go Fullscreen';
+                loadMaze(currentMazeIndex);
+            }
         } else {
-            // Enter fullscreen simulation
-            canvas.style.width = '100vw';
-            canvas.style.height = '100vh';
-            canvas.classList.add('fullscreen-mode');
+            // Standard fullscreen logic
+            if (!document.fullscreenElement) {
+                if (canvas.requestFullscreen) {
+                    canvas.requestFullscreen();
+                } else if (canvas.webkitRequestFullscreen) { // Safari
+                    canvas.webkitRequestFullscreen();
+                } else if (canvas.msRequestFullscreen) { // IE11
+                    canvas.msRequestFullscreen();
+                } else if (canvas.mozRequestFullScreen) { // Firefox
+                    canvas.mozRequestFullScreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // Safari
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE11
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                }
+            }
+        }
+    }
+
+    // Handle fullscreen change
+    function handleFullscreenChange() {
+        if (document.fullscreenElement) {
             fullscreenButton.textContent = 'Exit Fullscreen';
-            // Show fullscreen image
-            loadImage(fullscreenImages[currentMazeIndex]);
-        }
-    } else {
-        // Standard fullscreen logic
-        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            // Enter fullscreen mode
-            if (canvas.requestFullscreen) {
-                canvas.requestFullscreen();
-            } else if (canvas.webkitRequestFullscreen) { // Safari
-                canvas.webkitRequestFullscreen();
-            } else if (canvas.msRequestFullscreen) { // IE11
-                canvas.msRequestFullscreen();
-            } else if (canvas.mozRequestFullScreen) { // Firefox
-                canvas.mozRequestFullScreen();
-            }
-            // Load fullscreen image
-            loadImage(fullscreenImages[currentMazeIndex]);
         } else {
-            // Exit fullscreen mode
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { // Safari
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { // IE11
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
-            }
-            // Restore the maze image
-            loadImage(mazeImages[currentMazeIndex]);
+            fullscreenButton.textContent = 'Go Fullscreen';
+            loadMaze(currentMazeIndex); // Reload maze when exiting fullscreen
         }
     }
-    // Toggle fullscreen state
-    isFullscreen = !isFullscreen;
-}
 
-// Load the appropriate image
-function loadImage(imageSrc) {
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    const img = new Image();
-    img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext('2d').drawImage(img, 0, 0);
-    };
-    img.src = imageSrc;
-}
+    fullscreenButton.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
 
-// Add event listener to the fullscreen button
-fullscreenButton.addEventListener('click', toggleFullscreen);
-
-// Handle fullscreen change
-function handleFullscreenChange() {
-    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-        fullscreenButton.textContent = 'Exit Fullscreen'; // Update button text
-    } else {
-        fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
-    }
-}
-
-// Add fullscreen change event listeners
-document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
-document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
-document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE11
-
-
-
-    // Add touch event listeners for drawing
-    canvas.addEventListener('touchstart', startDrawing, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDrawing, { passive: false });
-    canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
-
-    // Add mouse event listeners for drawing
+    // Event listeners for drawing
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
 
-    // Initial load
-    loadMaze(currentMazeIndex);
-    introVideo.play();
-    statusBar.style.display = 'block'; // Show status bar
-    loadingStatus.style.display = 'block';
+    // Touch events for drawing
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+
+    // Prevent scrolling when touching the canvas
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, { passive: false });
 };
