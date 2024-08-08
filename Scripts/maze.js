@@ -45,8 +45,8 @@ window.onload = function() {
 
     // Event listener to hide video and show canvas when video ends
     introVideo.addEventListener('ended', function() {
-        exitFullscreen();
         showMaze();
+        exitFullscreen();
     });
 
     function showMaze() {
