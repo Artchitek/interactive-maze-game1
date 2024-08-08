@@ -13,7 +13,6 @@ window.onload = function() {
     const congratulationsPage = document.getElementById('congratulationsPage');
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
-    const gameContainer = document.getElementById('gameContainer');
     const colorPicker = document.getElementById('colorPicker');
 
     let drawing = false;
@@ -54,10 +53,8 @@ window.onload = function() {
         }
     });
 
-    // Event listener to hide video and show canvas when video ends
-    introVideo.addEventListener('ended', function() {
-        showMaze();
-    });
+    // Hide video and show canvas when video ends
+    introVideo.addEventListener('ended', showMaze);
 
     // Update color when color picker value changes
     colorPicker.addEventListener('input', function() {
@@ -65,32 +62,30 @@ window.onload = function() {
     });
 
     function showMaze() {
-        statusBar.style.display = 'none'; // Hide status bar
-        loadingStatus.style.display = 'none'; // Hide loading status
-        introVideo.style.display = 'none'; // Hide video
-        canvasContainer.style.display = 'block'; // Show canvas
-        toolsContainer.style.display = 'block'; // Show tools
-        prevButton.style.display = 'inline-block'; // Show Previous button
-        nextButton.style.display = 'inline-block'; // Show Next button
+        statusBar.style.display = 'none';
+        loadingStatus.style.display = 'none';
+        introVideo.style.display = 'none';
+        canvasContainer.style.display = 'block';
+        toolsContainer.style.display = 'block';
+        prevButton.style.display = 'inline-block';
+        nextButton.style.display = 'inline-block';
         loadMaze(currentMazeIndex);
     }
 
     function startDrawing(e) {
-        e.preventDefault(); // Prevent default touch behavior
+        e.preventDefault();
         drawing = true;
-        draw(e); // To draw a point at the starting position
+        draw(e); // Draw a point at the starting position
     }
 
     function draw(e) {
         if (!drawing) return;
 
         const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width; // Scaling factor for X
-        const scaleY = canvas.height / rect.height; // Scaling factor for Y
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
 
         let x, y;
-
-        // Detect if the event is a touch or mouse event
         if (e.touches) {
             const touch = e.touches[0];
             x = (touch.clientX - rect.left) * scaleX;
@@ -103,13 +98,11 @@ window.onload = function() {
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
         ctx.strokeStyle = currentColor;
-
         ctx.lineTo(x, y);
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(x, y);
 
-        // Draw to off-screen canvas as well
         offScreenCtx.lineWidth = size;
         offScreenCtx.lineCap = 'round';
         offScreenCtx.strokeStyle = currentColor;
@@ -122,8 +115,8 @@ window.onload = function() {
     function stopDrawing(e) {
         e.preventDefault();
         drawing = false;
-        ctx.beginPath(); // Reset the path
-        offScreenCtx.beginPath(); // Reset the path on off-screen canvas
+        ctx.beginPath();
+        offScreenCtx.beginPath();
     }
 
     // Set tool size
@@ -134,8 +127,8 @@ window.onload = function() {
     // Clear the canvas
     window.clearCanvas = function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height); // Redraw maze
-        offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height); // Clear off-screen canvas
+        ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
+        offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
     };
 
     // Align brush with mouse pointer
@@ -154,15 +147,13 @@ window.onload = function() {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
-
             offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
 
-            // Apply animation if provided
             if (animation) {
                 canvas.classList.add(animation);
                 setTimeout(() => {
                     canvas.classList.remove(animation);
-                }, 500); // Adjust duration as needed
+                }, 500);
             }
         };
 
@@ -173,8 +164,8 @@ window.onload = function() {
     // Previous maze
     window.prevMaze = function() {
         if (currentMazeIndex > 0) {
-            currentMazeIndex--; // Decrement the maze index
-            loadMaze(currentMazeIndex, 'fade-in'); // Load the previous maze with animation
+            currentMazeIndex--;
+            loadMaze(currentMazeIndex, 'fade-in');
         }
     };
 
@@ -209,52 +200,48 @@ window.onload = function() {
         return /iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
-    function toggleFullscreen() {
-        if (isIOS()) {
-            // Simulate fullscreen by resizing the canvas to fit the screen
-            if (!canvas.classList.contains('fullscreen-mode')) {
-                canvas.style.width = '100vw';
-                canvas.style.height = '100vh';
-                canvas.classList.add('fullscreen-mode');
-                fullscreenButton.textContent = 'Exit Fullscreen';
-                document.getElementById('overlayToolsContainer').style.display = 'flex'; // Show tools in fullscreen
-                loadMaze(currentMazeIndex); // Reload the maze image
-            } else {
-                canvas.style.width = '';
-                canvas.style.height = '';
-                canvas.classList.remove('fullscreen-mode');
-                fullscreenButton.textContent = 'Go Fullscreen';
-                document.getElementById('overlayToolsContainer').style.display = 'none'; // Hide tools when exiting fullscreen
-                loadMaze(currentMazeIndex); // Reload the maze image
+// Toggle fullscreen mode
+function toggleFullscreen() {
+    if (isIOS()) {
+        // Simulate fullscreen by resizing the canvas to fit the screen
+        if (!canvas.classList.contains('fullscreen-mode')) {
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            canvas.classList.add('fullscreen-mode');
+            fullscreenButton.textContent = 'Exit Fullscreen';
+            loadMaze(currentMazeIndex); // Reload the maze image
+        } else {
+            canvas.style.width = '';
+            canvas.style.height = '';
+            canvas.classList.remove('fullscreen-mode');
+            fullscreenButton.textContent = 'Go Fullscreen';
+            loadMaze(currentMazeIndex); // Reload the maze image
+        }
+    } else {
+        // Standard fullscreen logic
+        if (!document.fullscreenElement) {
+            if (canvas.requestFullscreen) {
+                canvas.requestFullscreen();
+            } else if (canvas.webkitRequestFullscreen) { // Safari
+                canvas.webkitRequestFullscreen();
+            } else if (canvas.msRequestFullscreen) { // IE11
+                canvas.msRequestFullscreen();
+            } else if (canvas.mozRequestFullScreen) { // Firefox
+                canvas.mozRequestFullScreen();
             }
         } else {
-            // Standard fullscreen logic
-            if (!document.fullscreenElement) {
-                if (canvas.requestFullscreen) {
-                    canvas.requestFullscreen();
-                } else if (canvas.webkitRequestFullscreen) { // Safari
-                    canvas.webkitRequestFullscreen();
-                } else if (canvas.msRequestFullscreen) { // IE11
-                    canvas.msRequestFullscreen();
-                } else if (canvas.mozRequestFullScreen) { // Firefox
-                    canvas.mozRequestFullScreen();
-                }
-                document.getElementById('overlayToolsContainer').style.display = 'flex'; // Show tools in fullscreen
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { // Safari
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { // IE11
-                    document.msExitFullscreen();
-                } else if (document.mozCancelFullScreen) { // Firefox
-                    document.mozCancelFullScreen();
-                }
-                document.getElementById('overlayToolsContainer').style.display = 'none'; // Hide tools when exiting fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { // Safari
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE11
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
             }
         }
     }
-    
+}
 
 // Handle fullscreen change
 function handleFullscreenChange() {
@@ -300,6 +287,7 @@ function loadMaze(index, animation) {
     prevButton.style.display = index === 0 ? 'none' : 'inline-block';
     nextButton.style.display = index === mazeImages.length - 1 ? 'none' : 'inline-block';
 }
+
 
     // Event listeners for drawing
     canvas.addEventListener('mousedown', startDrawing);
