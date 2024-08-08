@@ -211,7 +211,7 @@ window.onload = function() {
 
 // Function to toggle fullscreen mode
 function toggleFullscreen() {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement) {
         // Enter fullscreen mode
         if (canvas.requestFullscreen) {
             canvas.requestFullscreen();
@@ -221,6 +221,8 @@ function toggleFullscreen() {
             canvas.msRequestFullscreen();
         } else if (canvas.mozRequestFullScreen) { // Firefox
             canvas.mozRequestFullScreen();
+        } else if (canvas.webkitEnterFullscreen) { // iOS Safari
+            canvas.webkitEnterFullscreen();
         }
     } else {
         // Exit fullscreen mode
@@ -232,6 +234,8 @@ function toggleFullscreen() {
             document.msExitFullscreen();
         } else if (document.mozCancelFullScreen) { // Firefox
             document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) { // iOS Safari
+            document.webkitExitFullscreen();
         }
     }
 }
@@ -254,6 +258,7 @@ function handleFullscreenChange() {
         loadMaze(currentMazeIndex);
     }
 }
+
 
 
     // Handle fullscreen change
