@@ -209,10 +209,10 @@ window.onload = function() {
         };
     }
 
-// Function to detect if the user is on an iOS device.
-    function isIOS() {
-        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
+// Function to detect if the user is on an iOS device
+function isIOS() {
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
 
 // Function to toggle fullscreen mode
 function toggleFullscreen() {
@@ -232,7 +232,7 @@ function toggleFullscreen() {
             fullscreenButton.textContent = 'Exit Fullscreen';
         }
     } else {
-        // Existing code for non-iOS devices
+        // Standard fullscreen logic
         if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement) {
             // Enter fullscreen mode
             if (canvas.requestFullscreen) {
@@ -259,21 +259,25 @@ function toggleFullscreen() {
     }
 }
 
+// Add event listener to the fullscreen button
+fullscreenButton.addEventListener('click', toggleFullscreen);
 
-    // Handle fullscreen change
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-            canvas.style.width = '100%';
-            canvas.style.height = 'auto';
-            fullscreenButton.textContent = 'Exit Fullscreen'; // Update button text
-            loadMaze(currentMazeIndex); // Reload the maze with fullscreen image
-        } else {
-            canvas.style.width = '';
-            canvas.style.height = '';
-            fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
-            loadMaze(currentMazeIndex); // Reload the maze with normal image
-        }
-    });
+// Handle fullscreen change
+function handleFullscreenChange() {
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+        fullscreenButton.textContent = 'Exit Fullscreen'; // Update button text
+    } else {
+        fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
+    }
+}
+
+// Add fullscreen change event listeners
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
+document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
+document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE11
+
+
 
     // Add touch event listeners for drawing
     canvas.addEventListener('touchstart', startDrawing, { passive: false });
