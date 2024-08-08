@@ -14,11 +14,9 @@ window.onload = function() {
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
-    const colorPicker = document.getElementById('colorPicker');
 
     let drawing = false;
     let size = sizeInput.value;
-    let currentColor = colorPicker.value; // Initial color
     let currentMazeIndex = 0;
 
     // Maze images array
@@ -47,12 +45,8 @@ window.onload = function() {
 
     // Event listener to hide video and show canvas when video ends
     introVideo.addEventListener('ended', function() {
+        exitFullscreen();
         showMaze();
-    });
-
-    // Update color when color picker value changes
-    colorPicker.addEventListener('input', function() {
-        currentColor = colorPicker.value;
     });
 
     function showMaze() {
@@ -95,7 +89,7 @@ window.onload = function() {
 
         ctx.lineWidth = size;
         ctx.lineCap = 'round';
-        ctx.strokeStyle = currentColor; // Use current color
+        ctx.strokeStyle = '#ff4081'; // Drawing color
 
         ctx.lineTo(x, y);
         ctx.stroke();
@@ -105,7 +99,7 @@ window.onload = function() {
         // Draw to off-screen canvas as well
         offScreenCtx.lineWidth = size;
         offScreenCtx.lineCap = 'round';
-        offScreenCtx.strokeStyle = currentColor; // Use current color
+        offScreenCtx.strokeStyle = '#ff4081';
         offScreenCtx.lineTo(x, y);
         offScreenCtx.stroke();
         offScreenCtx.beginPath();
@@ -224,19 +218,30 @@ window.onload = function() {
         }
     });
 
+    // Exit fullscreen function
+    function exitFullscreen() {
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(err => {
+                console.error(`Error attempting to exit full-screen mode: ${err.message} (${err.name})`);
+            });
+        }
+    }
+
     // Add touch event listeners for drawing
     canvas.addEventListener('touchstart', startDrawing, { passive: false });
     canvas.addEventListener('touchmove', draw, { passive: false });
     canvas.addEventListener('touchend', stopDrawing, { passive: false });
     canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
 
-    // Add mouse event listeners for drawing
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
-
     // Show the initial intro video
     introVideo.play();
-    statusBar.style.display = 'block'; // Show status bar
+    statusBar.style.display = 'block';
+    loadingStatus.style.display = 'block';
+    canvasContainer.style.display = 'none';
+    toolsContainer.style.display = 'none';
+    prevButton.style.display = 'none';
+    nextButton.style.display = 'none';
+
+    // Load the first maze after the intro video
+    loadMaze(currentMazeIndex);
 };
