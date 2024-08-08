@@ -214,26 +214,55 @@ function isIOS() {
     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
+// Global variables
+let isFullscreen = false;
+const fullscreenImages = [
+    'fullscreen-image1.jpg',
+    'fullscreen-image2.jpg',
+    'fullscreen-image3.jpg',
+    'fullscreen-image4.jpg',
+    'fullscreen-image5.jpg'
+];
+const mazeImages = [
+    'maze-image1.jpg',
+    'maze-image2.jpg',
+    'maze-image3.jpg',
+    'maze-image4.jpg',
+    'maze-image5.jpg'
+];
+let currentMazeIndex = 0;
+const canvas = document.getElementById('mazeCanvas');
+const fullscreenButton = document.getElementById('fullscreenButton');
+
+// Function to detect if the user is on an iOS device
+function isIOS() {
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 // Function to toggle fullscreen mode
 function toggleFullscreen() {
     if (isIOS()) {
         // Simulate fullscreen by resizing the canvas to fit the screen
-        if (canvas.classList.contains('ios-fullscreen')) {
+        if (isFullscreen) {
             // Exit fullscreen simulation
             canvas.style.width = '';
             canvas.style.height = '';
-            canvas.classList.remove('ios-fullscreen');
+            canvas.classList.remove('fullscreen-mode');
             fullscreenButton.textContent = 'Go Fullscreen';
+            // Restore the maze image
+            loadImage(mazeImages[currentMazeIndex]);
         } else {
             // Enter fullscreen simulation
             canvas.style.width = '100vw';
             canvas.style.height = '100vh';
-            canvas.classList.add('ios-fullscreen');
+            canvas.classList.add('fullscreen-mode');
             fullscreenButton.textContent = 'Exit Fullscreen';
+            // Show fullscreen image
+            loadImage(fullscreenImages[currentMazeIndex]);
         }
     } else {
         // Standard fullscreen logic
-        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement) {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
             // Enter fullscreen mode
             if (canvas.requestFullscreen) {
                 canvas.requestFullscreen();
@@ -244,6 +273,8 @@ function toggleFullscreen() {
             } else if (canvas.mozRequestFullScreen) { // Firefox
                 canvas.mozRequestFullScreen();
             }
+            // Load fullscreen image
+            loadImage(fullscreenImages[currentMazeIndex]);
         } else {
             // Exit fullscreen mode
             if (document.exitFullscreen) {
@@ -255,8 +286,24 @@ function toggleFullscreen() {
             } else if (document.mozCancelFullScreen) { // Firefox
                 document.mozCancelFullScreen();
             }
+            // Restore the maze image
+            loadImage(mazeImages[currentMazeIndex]);
         }
     }
+    // Toggle fullscreen state
+    isFullscreen = !isFullscreen;
+}
+
+// Load the appropriate image
+function loadImage(imageSrc) {
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    const img = new Image();
+    img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+    };
+    img.src = imageSrc;
 }
 
 // Add event listener to the fullscreen button
@@ -276,6 +323,7 @@ document.addEventListener('fullscreenchange', handleFullscreenChange);
 document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
 document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
 document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE11
+
 
 
 
