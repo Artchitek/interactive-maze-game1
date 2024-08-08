@@ -2,6 +2,255 @@
 <html lang="en-US">
 <head>
     <meta charset="UTF-8"/>
+    <style>
+body, html {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-align: center;
+    background-color: #ffebcc;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.canvas-container {
+    display: none; /* Hide canvas initially */
+    position: relative;
+    width: 80%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff3e0;
+    border: 5px solid #ffcc80;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
+
+canvas {
+    border: 3px dashed #ffab40;
+    background-color: #ffe0b2;
+    cursor: crosshair;
+    width: 100%;
+    height: auto; /* Ensure responsive height */
+}
+
+.tools {
+    margin-top: 10px;
+}
+
+.tools button, .tools input {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid #ff9800;
+    background-color: #ffcc80;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tools button:hover, .tools input:hover {
+    background-color: #ffa726;
+}
+
+.navigation {
+    margin-top: 20px;
+}
+
+.navigation button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid #ff9800;
+    background-color: #ffcc80;
+    color: #fff;
+    cursor: pointer;
+}
+
+.navigation button:hover {
+    background-color: #ffa726;
+}
+
+#introVideo {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    border: 5px solid #ffcc80;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#statusBar {
+    width: 80%;
+    max-width: 800px;
+    height: 30px;
+    background-color: #ffe0b2;
+    margin: 20px auto;
+    position: relative;
+    display: none; /* Hide status bar initially */
+    border: 2px solid #ff9800;
+    border-radius: 15px;
+}
+
+#progress {
+    height: 100%;
+    background-color: #76c7c0;
+    width: 0%;
+    border-radius: 15px 0 0 15px;
+}
+
+#loadingStatus {
+    position: absolute;
+    top: -30px;
+    width: 100%;
+    font-size: 18px;
+    color: #333;
+    display: none; /* Hide loading status initially */
+}
+
+#congratulationsPage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#congratulationsContent {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#congratulationsContent h1 {
+    color: #4caf50;
+}
+
+#congratulationsContent p {
+    margin: 20px 0;
+}
+
+#continueButton {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#continueButton:hover {
+    background-color: #45a049;
+}
+
+#fullscreenButton {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px;
+}
+
+#fullscreenButton:hover {
+    background-color: #45a049;
+}
+
+/* Animation styles */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.fullscreen-mode {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #fff;
+}
+/* Styles for mobile devices in fullscreen mode */
+@media (max-width: 768px) {
+    #toolsContainer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    
+    #toolsContainer button,
+    #toolsContainer input {
+        margin: 0 5px;
+        font-size: 14px;
+    }
+}
+#overlayToolsContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 1000; /* Ensure it’s on top of other content */
+}
+#overlayToolsContainer button,
+#overlayToolsContainer input {
+    font-size: 16px; /* Larger font size for better touch interaction */
+    padding: 10px; /* Larger touch area */
+}
+
+
+    </style>
     <script type="text/javascript">
     (window.NREUM || (NREUM = {})).init = {
         ajax: {
@@ -12,7 +261,7 @@
         licenseKey: "e7fb1b89a0",
         applicationID: "750147145"
     };
-    ; /*! For license information please see nr-loader-rum-1.263.0.min.js.LICENSE.txt */
+    ; ! For license information please see nr-loader-rum-1.263.0.min.js.LICENSE.txt */
     (() => {
         var e,
             t,
@@ -1887,8 +2136,8 @@
     <meta name="keywords" content="ChildrensBooks, KidsEmotions, EmpathyForKids, FriendshipStories, CareerEducation, ArchitectForKids, IllustratedBooks, TeachingEmotions, KidsCareerBooks, UnderstandingFeelings, ChildrensStorytelling, CareerExploration, EmotionalIntelligence, LearningAboutJobs, KidsLiterature">
     <link rel="icon" href="https://cdn.myportfolio.com/32131c10-70c7-499e-850a-051ff248f3fb/8501715b-cc96-4301-a67e-c5199c83f274_carw_1x1x32.jpg?h=3e340764ab449d7318a6123f519826c9"/>
     <link rel="apple-touch-icon" href="https://cdn.myportfolio.com/32131c10-70c7-499e-850a-051ff248f3fb/d7596eca-d412-422e-aadd-9de31f94c927_carw_1x1x180.jpg?h=ff97e1730fcc4f7660e15d746b854aa0"/>
-    <link rel="stylesheet" href="/Styles/main.css" type="text/css"/>
     <link rel="stylesheet" href="/Styles/canvas.css" type="text/css"/>
+    <link rel="stylesheet" href="/Styles/main.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdn.myportfolio.com/32131c10-70c7-499e-850a-051ff248f3fb/ec832dd0f8c886c466ac11eb3eea5c091722895199.css?h=af0fb5fb2786a84ef4aeeb32c083720c" type="text/css"/>
     <link rel="canonical" href="https://misterpbooks.com/nilos-classic-games"/>
     <title>Mister P Books - Nilo's Classic Games</title>
@@ -2062,6 +2311,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="overlayToolsContainer">
+                                <button onclick="setMode('draw')">Draw</button>
+                                <button onclick="clearCanvas()">Clear</button>
+                                <label for="size">Brush Size:</label>
+                                <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
+                                <label for="color">Brush Color:</label>
+                                <input type="color" id="colorPicker" value="#ff4081">
+                            </div>
+                            
                             <!-- Congratulations Message -->
                             <div id="congratulationsPage" style="display: none;">
                                 <div id="congratulationsContent">
