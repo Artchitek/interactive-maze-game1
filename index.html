@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <style>
 body, html {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Comic Sans MS', Arial, Helvetica, sans-serif, sans-serif;
     text-align: center;
     background-color: #ffebcc;
     margin: 0;
@@ -243,15 +243,10 @@ canvas {
     box-sizing: border-box;
     z-index: 1000; /* Ensure it’s on top of other content */
 }
-#overlayToolsContainer button {
-    font-size: 16px;
-    padding: 10px;
-    margin: 0 5px;
-}
-
-#brushSizeDisplay {
-    font-size: 18px;
-    padding: 0 10px;
+#overlayToolsContainer button,
+#overlayToolsContainer input {
+    font-size: 16px; /* Larger font size for better touch interaction */
+    padding: 15px; /* Larger touch area */
 }
 
 
@@ -2324,7 +2319,6 @@ canvas {
                                 <label for="color">Brush Color:</label>
                                 <input type="color" id="colorPicker" value="#ff4081">
                             </div>
-                            
                             
                             <!-- Congratulations Message -->
                             <div id="congratulationsPage" style="display: none;">
