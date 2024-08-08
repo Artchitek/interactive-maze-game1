@@ -209,55 +209,56 @@ window.onload = function() {
         };
     }
 
+// Function to detect if the user is on an iOS device.
+    function isIOS() {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
 // Function to toggle fullscreen mode
 function toggleFullscreen() {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement) {
-        // Enter fullscreen mode
-        if (canvas.requestFullscreen) {
-            canvas.requestFullscreen();
-        } else if (canvas.webkitRequestFullscreen) { // Safari
-            canvas.webkitRequestFullscreen();
-        } else if (canvas.msRequestFullscreen) { // IE11
-            canvas.msRequestFullscreen();
-        } else if (canvas.mozRequestFullScreen) { // Firefox
-            canvas.mozRequestFullScreen();
-        } else if (canvas.webkitEnterFullscreen) { // iOS Safari
-            canvas.webkitEnterFullscreen();
+    if (isIOS()) {
+        // Simulate fullscreen by resizing the canvas to fit the screen
+        if (canvas.classList.contains('ios-fullscreen')) {
+            // Exit fullscreen simulation
+            canvas.style.width = '';
+            canvas.style.height = '';
+            canvas.classList.remove('ios-fullscreen');
+            fullscreenButton.textContent = 'Go Fullscreen';
+        } else {
+            // Enter fullscreen simulation
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            canvas.classList.add('ios-fullscreen');
+            fullscreenButton.textContent = 'Exit Fullscreen';
         }
     } else {
-        // Exit fullscreen mode
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { // Safari
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { // IE11
-            document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) { // Firefox
-            document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) { // iOS Safari
-            document.webkitExitFullscreen();
+        // Existing code for non-iOS devices
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement) {
+            // Enter fullscreen mode
+            if (canvas.requestFullscreen) {
+                canvas.requestFullscreen();
+            } else if (canvas.webkitRequestFullscreen) { // Safari
+                canvas.webkitRequestFullscreen();
+            } else if (canvas.msRequestFullscreen) { // IE11
+                canvas.msRequestFullscreen();
+            } else if (canvas.mozRequestFullScreen) { // Firefox
+                canvas.mozRequestFullScreen();
+            }
+        } else {
+            // Exit fullscreen mode
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { // Safari
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE11
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            }
         }
     }
 }
 
-// Add event listener to the fullscreen button
-fullscreenButton.addEventListener('click', toggleFullscreen);
-
-// Update the button text and load maze image based on fullscreen state
-document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
-document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
-document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE11
-
-function handleFullscreenChange() {
-    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-        fullscreenButton.textContent = 'Exit Fullscreen';
-        loadMaze(currentMazeIndex);
-    } else {
-        fullscreenButton.textContent = 'Go Fullscreen';
-        loadMaze(currentMazeIndex);
-    }
-}
 
     // Handle fullscreen change
     document.addEventListener('fullscreenchange', () => {
