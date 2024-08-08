@@ -259,8 +259,6 @@ function handleFullscreenChange() {
     }
 }
 
-
-
     // Handle fullscreen change
     document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
