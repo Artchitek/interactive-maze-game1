@@ -177,9 +177,11 @@ window.onload = function() {
     // Previous maze
     window.prevMaze = function() {
         if (currentMazeIndex > 0) {
-            showCongratulationsPage('prev');
-        }
+        currentMazeIndex--; // Decrement the maze index
+        loadMaze(currentMazeIndex, 'fade-in'); // Load the previous maze with animation
+         }
     };
+
 
     // Next maze
     window.nextMaze = function() {
@@ -207,18 +209,52 @@ window.onload = function() {
         };
     }
 
-    // Fullscreen functionality
-    fullscreenButton.addEventListener('click', toggleFullscreen);
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            gameContainer.requestFullscreen().catch(err => {
-                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-            });
-        } else {
+// Function to toggle fullscreen mode
+function toggleFullscreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        // Enter fullscreen mode
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) { // Safari
+            canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) { // IE11
+            canvas.msRequestFullscreen();
+        } else if (canvas.mozRequestFullScreen) { // Firefox
+            canvas.mozRequestFullScreen();
+        }
+    } else {
+        // Exit fullscreen mode
+        if (document.exitFullscreen) {
             document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // Safari
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { // IE11
+            document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
         }
     }
+}
+
+// Add event listener to the fullscreen button
+fullscreenButton.addEventListener('click', toggleFullscreen);
+
+// Update the button text and load maze image based on fullscreen state
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
+document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
+document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE11
+
+function handleFullscreenChange() {
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+        fullscreenButton.textContent = 'Exit Fullscreen';
+        loadMaze(currentMazeIndex);
+    } else {
+        fullscreenButton.textContent = 'Go Fullscreen';
+        loadMaze(currentMazeIndex);
+    }
+}
+
 
     // Handle fullscreen change
     document.addEventListener('fullscreenchange', () => {
