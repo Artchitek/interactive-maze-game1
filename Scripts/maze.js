@@ -200,48 +200,52 @@ window.onload = function() {
         return /iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
-// Toggle fullscreen mode
-function toggleFullscreen() {
-    if (isIOS()) {
-        // Simulate fullscreen by resizing the canvas to fit the screen
-        if (!canvas.classList.contains('fullscreen-mode')) {
-            canvas.style.width = '100vw';
-            canvas.style.height = '100vh';
-            canvas.classList.add('fullscreen-mode');
-            fullscreenButton.textContent = 'Exit Fullscreen';
-            loadMaze(currentMazeIndex); // Reload the maze image
-        } else {
-            canvas.style.width = '';
-            canvas.style.height = '';
-            canvas.classList.remove('fullscreen-mode');
-            fullscreenButton.textContent = 'Go Fullscreen';
-            loadMaze(currentMazeIndex); // Reload the maze image
-        }
-    } else {
-        // Standard fullscreen logic
-        if (!document.fullscreenElement) {
-            if (canvas.requestFullscreen) {
-                canvas.requestFullscreen();
-            } else if (canvas.webkitRequestFullscreen) { // Safari
-                canvas.webkitRequestFullscreen();
-            } else if (canvas.msRequestFullscreen) { // IE11
-                canvas.msRequestFullscreen();
-            } else if (canvas.mozRequestFullScreen) { // Firefox
-                canvas.mozRequestFullScreen();
+    function toggleFullscreen() {
+        if (isIOS()) {
+            // Simulate fullscreen by resizing the canvas to fit the screen
+            if (!canvas.classList.contains('fullscreen-mode')) {
+                canvas.style.width = '100vw';
+                canvas.style.height = '100vh';
+                canvas.classList.add('fullscreen-mode');
+                fullscreenButton.textContent = 'Exit Fullscreen';
+                document.getElementById('overlayToolsContainer').style.display = 'flex'; // Show tools in fullscreen
+                loadMaze(currentMazeIndex); // Reload the maze image
+            } else {
+                canvas.style.width = '';
+                canvas.style.height = '';
+                canvas.classList.remove('fullscreen-mode');
+                fullscreenButton.textContent = 'Go Fullscreen';
+                document.getElementById('overlayToolsContainer').style.display = 'none'; // Hide tools when exiting fullscreen
+                loadMaze(currentMazeIndex); // Reload the maze image
             }
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { // Safari
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { // IE11
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
+            // Standard fullscreen logic
+            if (!document.fullscreenElement) {
+                if (canvas.requestFullscreen) {
+                    canvas.requestFullscreen();
+                } else if (canvas.webkitRequestFullscreen) { // Safari
+                    canvas.webkitRequestFullscreen();
+                } else if (canvas.msRequestFullscreen) { // IE11
+                    canvas.msRequestFullscreen();
+                } else if (canvas.mozRequestFullScreen) { // Firefox
+                    canvas.mozRequestFullScreen();
+                }
+                document.getElementById('overlayToolsContainer').style.display = 'flex'; // Show tools in fullscreen
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // Safari
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE11
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                }
+                document.getElementById('overlayToolsContainer').style.display = 'none'; // Hide tools when exiting fullscreen
             }
         }
     }
-}
+    
 
 // Handle fullscreen change
 function handleFullscreenChange() {
