@@ -2034,52 +2034,44 @@
                         </a>
                     </div>
                     <body>
-                        <h1 style="color: #ff6f00;">🎉 Interactive Maze Game 🎉</h1>
-                        <video id="introVideo" controls>
-                            <source src="Images/Intro.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div id="statusBar">
-                            <div id="loadingStatus">Loading...</div>
-                            <div id="progress"></div>
-                        </div>
-                        <div id="gameContainer">
-                            <div class="canvas-container" id="canvasContainer">
-                                <canvas id="mazeCanvas"></canvas>
-                                <div class="tools" id="toolsContainer">
-                                    <button onclick="setMode('draw')">Draw</button>
-                                    <button onclick="clearCanvas()">Clear</button>
-                                    <label for="size">Brush Size:</label>
-                                    <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
-                                    <label for="color">Brush Color:</label>
-                                    <input type="color" id="colorPicker" value="#ff4081">
-                                </div>
-                                <div class="navigation">
-                                    <button id="prevButton" onclick="prevMaze()">Previous</button>
-                                    <button id="nextButton" onclick="nextMaze()">Next</button>
-                                    <button id="fullscreenButton">Go Fullscreen</button>
+                        <body>
+                            <h1 style="color: #ff6f00;">🎉 Interactive Maze Game 🎉</h1>
+                            <video id="introVideo" controls>
+                                <source src="Images/Intro.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div id="statusBar">
+                                <div id="loadingStatus">Loading...</div>
+                                <div id="progress"></div>
+                            </div>
+                            <div id="gameContainer">
+                                <div class="canvas-container" id="canvasContainer">
+                                    <canvas id="mazeCanvas"></canvas>
+                                    <div class="tools" id="toolsContainer">
+                                        <button onclick="setMode('draw')">Draw</button>
+                                        <button onclick="clearCanvas()">Clear</button>
+                                        <label for="size">Brush Size:</label>
+                                        <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
+                                        <label for="color">Brush Color:</label>
+                                        <input type="color" id="colorPicker" value="#ff4081">
+                                    </div>
+                                    <div class="navigation">
+                                        <button id="prevButton" onclick="prevMaze()">Previous</button>
+                                        <button id="nextButton" onclick="nextMaze()">Next</button>
+                                        <button id="fullscreenButton">Go Fullscreen</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="overlayToolsContainer">
-                            <button onclick="setMode('draw')">Draw</button>
-                            <button onclick="clearCanvas()">Clear</button>
-                            <label for="size">Brush Size:</label>
-                            <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
-                            <label for="color">Brush Color:</label>
-                            <input type="color" id="colorPicker" value="#ff4081">
-                        </div>
-                        
-                        <!-- Congratulations Message -->
-                        <div id="congratulationsPage" style="display: none;">
-                            <div id="congratulationsContent">
-                                <h1>Congratulations!</h1>
-                                <p>You’ve completed this level! Well done!</p>
-                                <button id="continueButton">Continue to Next Maze</button>
+                            <!-- Congratulations Message -->
+                            <div id="congratulationsPage" style="display: none;">
+                                <div id="congratulationsContent">
+                                    <h1>Congratulations!</h1>
+                                    <p>You’ve completed this level! Well done!</p>
+                                    <button id="continueButton">Continue to Next Maze</button>
+                                </div>
                             </div>
-                        </div>
-                        <script src="Scripts/maze.js"></script>
-                    </body>
+                            <script src="Scripts/maze.js"></script>
+                        </body>
   
                     <footer class="site-footer" data-hover-hint="footer">
                         <div class="social pf-footer-social" data-context="theme.footer" data-hover-hint="footerSocialIcons">
