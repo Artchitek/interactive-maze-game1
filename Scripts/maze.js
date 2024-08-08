@@ -209,30 +209,7 @@ window.onload = function() {
         };
     }
 
-// Function to detect if the user is on an iOS device
-function isIOS() {
-    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
 
-// Global variables
-let isFullscreen = false;
-const fullscreenImages = [
-    'fullscreen-image1.jpg',
-    'fullscreen-image2.jpg',
-    'fullscreen-image3.jpg',
-    'fullscreen-image4.jpg',
-    'fullscreen-image5.jpg'
-];
-const mazeImages = [
-    'maze-image1.jpg',
-    'maze-image2.jpg',
-    'maze-image3.jpg',
-    'maze-image4.jpg',
-    'maze-image5.jpg'
-];
-let currentMazeIndex = 0;
-const canvas = document.getElementById('mazeCanvas');
-const fullscreenButton = document.getElementById('fullscreenButton');
 
 // Function to detect if the user is on an iOS device
 function isIOS() {
@@ -323,7 +300,6 @@ document.addEventListener('fullscreenchange', handleFullscreenChange);
 document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
 document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
 document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE11
-
 
 
 
