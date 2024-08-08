@@ -243,10 +243,15 @@ canvas {
     box-sizing: border-box;
     z-index: 1000; /* Ensure it’s on top of other content */
 }
-#overlayToolsContainer button,
-#overlayToolsContainer input {
-    font-size: 16px; /* Larger font size for better touch interaction */
-    padding: 10px; /* Larger touch area */
+#overlayToolsContainer button {
+    font-size: 16px;
+    padding: 10px;
+    margin: 0 5px;
+}
+
+#brushSizeDisplay {
+    font-size: 18px;
+    padding: 0 10px;
 }
 
 
@@ -2319,6 +2324,7 @@ canvas {
                                 <label for="color">Brush Color:</label>
                                 <input type="color" id="colorPicker" value="#ff4081">
                             </div>
+                            
                             
                             <!-- Congratulations Message -->
                             <div id="congratulationsPage" style="display: none;">
