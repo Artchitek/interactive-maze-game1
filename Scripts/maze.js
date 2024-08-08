@@ -18,6 +18,7 @@ window.onload = function() {
     let drawing = false;
     let size = sizeInput.value;
     let currentMazeIndex = 0;
+    let isFullscreen = false;
 
     // Maze images array
     const mazeImages = [
@@ -26,6 +27,15 @@ window.onload = function() {
         'Images/maze3.png',
         'Images/maze4.png',
         'Images/maze5.png'
+    ];
+
+    // Larger maze images for fullscreen mode
+    const mazeImagesLarge = [
+        'Images/maze1_large.jpg',
+        'Images/maze2_large.jpg',
+        'Images/maze3_large.jpg',
+        'Images/maze4_large.jpg',
+        'Images/maze5_large.jpg'
     ];
 
     const mazeImage = new Image();
@@ -46,7 +56,6 @@ window.onload = function() {
     // Event listener to hide video and show canvas when video ends
     introVideo.addEventListener('ended', function() {
         showMaze();
-        exitFullscreen();
     });
 
     function showMaze() {
@@ -132,7 +141,8 @@ window.onload = function() {
 
     // Load maze image
     function loadMaze(index, animation) {
-        mazeImage.src = mazeImages[index];
+        const imageSrc = isFullscreen ? mazeImagesLarge[index] : mazeImages[index];
+        mazeImage.src = imageSrc;
         mazeImage.onload = function() {
             canvas.width = mazeImage.width;
             canvas.height = mazeImage.height;
@@ -207,25 +217,20 @@ window.onload = function() {
 
     // Handle fullscreen change
     document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
+        isFullscreen = !!document.fullscreenElement;
+
+        if (isFullscreen) {
+            loadMaze(currentMazeIndex, 'fade-in');
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
             fullscreenButton.textContent = 'Exit Fullscreen'; // Update button text
         } else {
+            loadMaze(currentMazeIndex, 'fade-in');
             canvas.style.width = '';
             canvas.style.height = '';
             fullscreenButton.textContent = 'Go Fullscreen'; // Update button text
         }
     });
-
-    // Exit fullscreen function
-    function exitFullscreen() {
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch(err => {
-                console.error(`Error attempting to exit full-screen mode: ${err.message} (${err.name})`);
-            });
-        }
-    }
 
     // Add touch event listeners for drawing
     canvas.addEventListener('touchstart', startDrawing, { passive: false });
