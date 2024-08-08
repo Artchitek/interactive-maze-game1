@@ -245,32 +245,7 @@ window.onload = function() {
             }
         }
     }
-
-    let brushSize = 2; // Initialize brush size
-
-function changeBrushSize(amount) {
-    brushSize += amount;
-
-    // Ensure brush size stays within a reasonable range
-    if (brushSize < 1) {
-        brushSize = 1;
-    } else if (brushSize > 20) {
-        brushSize = 20;
-    }
-
-    // Update the display
-    document.getElementById('brushSizeDisplay').textContent = brushSize;
-
-    // Update the actual brush size in your drawing logic
-    setSize(brushSize);
-}
-
-function setSize(size) {
-    brushSize = size;
-    // Update the canvas drawing brush size (assuming you have a context variable)
-    context.lineWidth = brushSize;
-}
-
+    
 
 // Handle fullscreen change
 function handleFullscreenChange() {
