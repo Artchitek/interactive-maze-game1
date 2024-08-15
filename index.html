@@ -3,44 +3,44 @@
 <head>
     <meta charset="UTF-8"/>
     <style>
-        body, html {
-            font-family: 'Comic Sans MS', Arial, Helvetica, sans-serif;
-            text-align: center;
-            background-color: #ffebcc;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
+body, html {
+    font-family: 'Comic Sans MS', Arial, Helvetica, sans-serif, sans-serif;
+    text-align: center;
+    background-color: #ffebcc;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
 
-        #gameContainer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-        }
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
 
-        .canvas-container {
-            display: none; /* Hide canvas initially */
-            position: relative;
-            width: 80%;
-            max-width: 1000px;
-            margin: 20px auto;
-            background-color: #fff3e0;
-            border: 5px solid #ffcc80;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-        }
+.canvas-container {
+    display: none; /* Hide canvas initially */
+    position: relative;
+    width: 80%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff3e0;
+    border: 5px solid #ffcc80;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
 
-        canvas {
-            border: 3px dashed #ffab40;
-            background-color: #ffe0b2;
-            cursor: crosshair;
-            width: 100%;
-            height: auto; /* Ensure responsive height */
-        }
+canvas {
+    border: 3px dashed #ffab40;
+    background-color: #ffe0b2;
+    cursor: crosshair;
+    width: 100%;
+    height: auto; /* Ensure responsive height */
+}
 
-        .tools, .navigation {
+.tools, .navigation {
             margin-top: 10px;
         }
 
@@ -59,16 +59,18 @@
             background-color: #ffa726;
         }
 
-        #introVideo {
-            width: 80%;
-            max-width: 800px;
-            margin: 20px auto;
-            border: 5px solid #ffcc80;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
 
-        #congratulationsPage {
+#introVideo {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    border: 5px solid #ffcc80;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+#congratulationsPage {
             position: fixed;
             top: 0;
             left: 0;
@@ -111,69 +113,70 @@
             background-color: #45a049;
         }
 
-        /* Animation styles */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+/* Animation styles */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-        @keyframes slideInRight {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
 
-        @keyframes slideInLeft {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
 
-        .slide-in-right {
-            animation: slideInRight 0.5s ease-out;
-        }
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
 
-        .slide-in-left {
-            animation: slideInLeft 0.5s ease-out;
-        }
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
 
-        .fullscreen-mode {
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            background-color: #fff;
-        }
+.fullscreen-mode {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #fff;
+}
+/* Styles for mobile devices in fullscreen mode */
+@media (max-width: 768px) {
 
-        /* Styles for mobile devices in fullscreen mode */
-        @media (max-width: 768px) {
-            #overlayToolsContainer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                color: white;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                padding: 10px;
-                box-sizing: border-box;
-                z-index: 1000; /* Ensure it’s on top of other content */
-            }
+}
+#overlayToolsContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 1000; /* Ensure it’s on top of other content */
+}
+#overlayToolsContainer button,
+#overlayToolsContainer input {
+    font-size: 16px; /* Larger font size for better touch interaction */
+    padding: 15px; /* Larger touch area */
+    border-radius: 5px;
+    background-color: #4caf50;
+}
 
-            #overlayToolsContainer button,
-            #overlayToolsContainer input {
-                font-size: 16px; /* Larger font size for better touch interaction */
-                padding: 15px; /* Larger touch area */
-                border-radius: 5px;
-                background-color: #4caf50;
-            }
-        }
+
     </style>
     <script type="text/javascript">
     (window.NREUM || (NREUM = {})).init = {
@@ -2220,12 +2223,13 @@
                                 <button id="prevButton" onclick="prevMaze()">Previous</button>
                                 <button id="nextButton" onclick="nextMaze()">Next</button>
                                 <button id="fullscreenButton">Go Fullscreen</button>
+                                <button id="exitFullscreenButton" onclick="exitFullscreen()" style="display: none;">Exit Fullscreen</button>
+                            </div>
                             </div>
                         </div>
                     </div>
                 
                     <div id="overlayToolsContainer">
-                        <button onclick="setMode('draw')">Draw</button>
                         <button onclick="clearCanvas()">Clear</button>
                         <label for="size">Brush Size:</label>
                         <input type="range" id="size" name="size" min="1" max="20" value="2" oninput="setSize(this.value)">
