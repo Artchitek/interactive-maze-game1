@@ -6,10 +6,6 @@ window.onload = function() {
     const nextButton = document.getElementById('nextButton');
     const introVideo = document.getElementById('introVideo');
     const canvasContainer = document.getElementById('canvasContainer');
-    const toolsContainer = document.getElementById('toolsContainer');
-    const statusBar = document.getElementById('statusBar');
-    const progress = document.getElementById('progress');
-    const loadingStatus = document.getElementById('loadingStatus');
     const congratulationsPage = document.getElementById('congratulationsPage');
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
@@ -44,14 +40,6 @@ window.onload = function() {
     const offScreenCanvas = document.createElement('canvas');
     const offScreenCtx = offScreenCanvas.getContext('2d');
 
-    // Update status bar width based on video progress
-    introVideo.addEventListener('timeupdate', function() {
-        const percent = (introVideo.currentTime / introVideo.duration) * 100;
-        progress.style.width = percent + '%';
-        if (percent >= 100) {
-            showMaze();
-        }
-    });
 
     // Hide video and show canvas when video ends
     introVideo.addEventListener('ended', showMaze);
@@ -62,11 +50,8 @@ window.onload = function() {
     });
 
     function showMaze() {
-        statusBar.style.display = 'none';
-        loadingStatus.style.display = 'none';
         introVideo.style.display = 'none';
         canvasContainer.style.display = 'block';
-        toolsContainer.style.display = 'block';
         prevButton.style.display = 'inline-block';
         nextButton.style.display = 'inline-block';
         loadMaze(currentMazeIndex);
@@ -136,30 +121,7 @@ window.onload = function() {
         canvas.style.cursor = 'crosshair';
     });
 
-    // Load maze image
-    function loadMaze(index, animation) {
-        mazeImage.src = document.fullscreenElement ? fullscreenMazeImages[index] : mazeImages[index];
-        mazeImage.onload = function() {
-            canvas.width = mazeImage.width;
-            canvas.height = mazeImage.height;
-            offScreenCanvas.width = mazeImage.width;
-            offScreenCanvas.height = mazeImage.height;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
-            offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-
-            if (animation) {
-                canvas.classList.add(animation);
-                setTimeout(() => {
-                    canvas.classList.remove(animation);
-                }, 500);
-            }
-        };
-
-        prevButton.style.display = index === 0 ? 'none' : 'inline-block';
-        nextButton.style.display = index === mazeImages.length - 1 ? 'none' : 'inline-block';
-    }
 
     // Previous maze
     window.prevMaze = function() {
@@ -178,13 +140,11 @@ window.onload = function() {
 
     function showCongratulationsPage(direction) {
         canvasContainer.style.display = 'none';
-        toolsContainer.style.display = 'none';
         congratulationsPage.style.display = 'flex';
 
         continueButton.onclick = function() {
             congratulationsPage.style.display = 'none';
             canvasContainer.style.display = 'block';
-            toolsContainer.style.display = 'block';
             if (direction === 'next') {
                 currentMazeIndex++;
                 loadMaze(currentMazeIndex, 'fade-in');
