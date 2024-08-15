@@ -9,6 +9,7 @@ window.onload = function() {
     const congratulationsPage = document.getElementById('congratulationsPage');
     const continueButton = document.getElementById('continueButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
+    const exitFullscreenButton = document.getElementById('exitFullscreenButton');
     const colorPicker = document.getElementById('colorPicker');
 
     let drawing = false;
@@ -48,8 +49,6 @@ window.onload = function() {
     colorPicker.addEventListener('input', function() {
         currentColor = colorPicker.value;
     });
-
-    
 
     function showMaze() {
         introVideo.style.display = 'none';
@@ -117,11 +116,6 @@ window.onload = function() {
         ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
         offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
     };
-
-    // Add the color picker event listener at the end of the maze.js file
-document.getElementById("colorPicker").addEventListener("input", function() {
-    this.style.backgroundColor = this.value;
-});
 
     // Align brush with mouse pointer
     canvas.addEventListener('mouseenter', () => {
@@ -214,8 +208,8 @@ document.getElementById("colorPicker").addEventListener("input", function() {
     }
     
 
-// Handle fullscreen change
-function handleFullscreenChange() {
+ // Handle fullscreen change
+ function handleFullscreenChange() {
     if (document.fullscreenElement || canvas.classList.contains('fullscreen-mode')) {
         fullscreenButton.textContent = 'Exit Fullscreen';
     } else {
@@ -224,28 +218,41 @@ function handleFullscreenChange() {
     loadMaze(currentMazeIndex); // Reload maze when fullscreen changes
 }
 
+// Exit fullscreen function
+window.exitFullscreen = function() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { // Safari
+        document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) { // IE11/Edge
+        document.msExitFullscreen();
+    }
+};
+
+// Toggle the visibility of the Exit Fullscreen button
+function toggleExitFullscreenButton() {
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+        exitFullscreenButton.style.display = 'inline-block';
+    } else {
+        exitFullscreenButton.style.display = 'none';
+    }
+}
+
+// Attach event listeners for fullscreen changes and button actions
 fullscreenButton.addEventListener('click', toggleFullscreen);
+exitFullscreenButton.addEventListener('click', exitFullscreen);
+
 document.addEventListener('fullscreenchange', handleFullscreenChange);
 document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 document.addEventListener('mozfullscreenchange', handleFullscreenChange);
 document.addEventListener('msfullscreenchange', handleFullscreenChange);
 
-// Event listeners to detect when the user enters or exits fullscreen mode.
 document.addEventListener('fullscreenchange', toggleExitFullscreenButton);
 document.addEventListener('webkitfullscreenchange', toggleExitFullscreenButton); // For Safari
 document.addEventListener('mozfullscreenchange', toggleExitFullscreenButton); // For Firefox
 document.addEventListener('MSFullscreenChange', toggleExitFullscreenButton); // For IE/Edge
-
-function toggleExitFullscreenButton() {
-    const exitButton = document.getElementById('exitFullscreenButton');
-    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-        exitButton.style.display = 'inline-block';
-    } else {
-        exitButton.style.display = 'none';
-    }
-}
-
-
 // Load maze image
 function loadMaze(index, animation) {
     mazeImage.src = (document.fullscreenElement || canvas.classList.contains('fullscreen-mode'))
