@@ -245,18 +245,6 @@ function toggleExitFullscreenButton() {
     }
 }
 
-// Allow the user to exit fullscreen mode when they click the button.
-function exitFullscreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) { // Safari
-        document.webkitExitFullscreen();
-    } else if (document.mozCancelFullScreen) { // Firefox
-        document.mozCancelFullScreen();
-    } else if (document.msExitFullscreen) { // IE/Edge
-        document.msExitFullscreen();
-    }
-}
 
 // Load maze image
 function loadMaze(index, animation) {
