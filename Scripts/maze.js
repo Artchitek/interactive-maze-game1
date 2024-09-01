@@ -264,7 +264,7 @@ window.onload = function() {
     
         let matchingPathPixels = 0;
         let totalPathPixels = 0;
-        const requiredMatchingPercentage = 90; // Lower this for testing, if necessary
+        const requiredMatchingPercentage = 20; // Lower this for testing, if necessary
     
         const debugCanvas = document.createElement('canvas');
         debugCanvas.width = offScreenCanvas.width;
