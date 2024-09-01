@@ -272,6 +272,9 @@ window.onload = function() {
         const debugCtx = debugCanvas.getContext('2d');
         debugCtx.drawImage(referenceImage, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
     
+    // Convert the user's brush color to RGB
+    const userColor = hexToRgb(userBrushColor);
+
         for (let i = 0; i < referenceImageData.data.length; i += 4) {
             const refR = referenceImageData.data[i];
             const refG = referenceImageData.data[i + 1];
