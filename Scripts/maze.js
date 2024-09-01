@@ -323,9 +323,7 @@ window.onload = function() {
             showCongratulationsPage('next');
         }
     }
-    
-    
-    
+      
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
