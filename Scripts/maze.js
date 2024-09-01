@@ -34,7 +34,17 @@ window.onload = function() {
         'Images/maze5_large.jpg'
     ];
 
+    // Reference images for correct paths
+    const referenceImages = [
+        'Images/correctPath1.png',
+        'Images/correctPath1.png',
+        'Images/correctPath1.png',
+        'Images/correctPath1.png',
+        'Images/correctPath1.png'
+    ];
+
     const mazeImage = new Image();
+    const referenceImage = new Image();
 
     // Off-screen canvas for storing drawing content
     const offScreenCanvas = document.createElement('canvas');
@@ -105,6 +115,9 @@ window.onload = function() {
         drawing = false;
         ctx.beginPath();
         offScreenCtx.beginPath();
+
+        // Check if the user completed the maze correctly
+        checkCompletion();
     }
 
     // Set tool size
@@ -205,7 +218,7 @@ window.onload = function() {
             }
         }
     }
-    
+
     // Handle fullscreen change
     function handleFullscreenChange() {
         if (document.fullscreenElement || canvas.classList.contains('fullscreen-mode')) {
@@ -227,37 +240,98 @@ window.onload = function() {
         mazeImage.src = (document.fullscreenElement || canvas.classList.contains('fullscreen-mode'))
             ? fullscreenMazeImages[index]
             : mazeImages[index];
+        referenceImage.src = referenceImages[index]; // Load the corresponding reference image
+
         mazeImage.onload = function() {
             canvas.width = mazeImage.width;
             canvas.height = mazeImage.height;
+            ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
             offScreenCanvas.width = mazeImage.width;
             offScreenCanvas.height = mazeImage.height;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(mazeImage, 0, 0, canvas.width, canvas.height);
-
             offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
         };
-
-        prevButton.style.display = index === 0 ? 'none' : 'inline-block';
-        nextButton.style.display = index === mazeImages.length - 1 ? 'none' : 'inline-block';
     }
 
-    // Event listeners for drawing
+    function checkCompletion() {
+        if (!referenceImage.complete) return;
+    
+        const userImageData = offScreenCtx.getImageData(0, 0, offScreenCanvas.width, offScreenCanvas.height);
+        const referenceCtx = document.createElement('canvas').getContext('2d');
+        referenceCtx.canvas.width = referenceImage.width;
+        referenceCtx.canvas.height = referenceImage.height;
+        referenceCtx.drawImage(referenceImage, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
+        const referenceImageData = referenceCtx.getImageData(0, 0, offScreenCanvas.width, offScreenCanvas.height);
+    
+        let matchingPathPixels = 0;
+        let totalPathPixels = 0;
+        const requiredMatchingPercentage = 90; // Minimum percentage of correct path required to be marked as complete
+    
+        // Create a canvas context for visual debugging
+        const debugCanvas = document.createElement('canvas');
+        debugCanvas.width = offScreenCanvas.width;
+        debugCanvas.height = offScreenCanvas.height;
+        const debugCtx = debugCanvas.getContext('2d');
+        debugCtx.drawImage(referenceImage, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
+    
+        for (let i = 0; i < referenceImageData.data.length; i += 4) {
+            const refR = referenceImageData.data[i];
+            const refG = referenceImageData.data[i + 1];
+            const refB = referenceImageData.data[i + 2];
+            const refA = referenceImageData.data[i + 3];
+    
+            if (refA !== 0) { // Pixel is part of the reference path
+                totalPathPixels++;
+    
+                const userR = userImageData.data[i];
+                const userG = userImageData.data[i + 1];
+                const userB = userImageData.data[i + 2];
+                const userA = userImageData.data[i + 3];
+    
+                if (
+                    userA !== 0 && // User drew on this pixel
+                    Math.abs(userR - refR) < 50 && // Allow some color tolerance
+                    Math.abs(userG - refG) < 50 &&
+                    Math.abs(userB - refB) < 50
+                ) {
+                    matchingPathPixels++;
+                    // Mark correct pixel with green on the debug canvas
+                    debugCtx.fillStyle = 'rgba(0, 255, 0, 0.5)'; // Green
+                } else {
+                    // Mark incorrect pixel with red on the debug canvas
+                    debugCtx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Red
+                }
+                const x = (i / 4) % offScreenCanvas.width;
+                const y = Math.floor((i / 4) / offScreenCanvas.width);
+                debugCtx.fillRect(x, y, 1, 1); // Draw a small rectangle over the pixel
+            }
+        }
+    
+        const matchingPercentage = (matchingPathPixels / totalPathPixels) * 100;
+    
+        // Display the debug canvas on top of the existing canvas for visualization
+        offScreenCtx.drawImage(debugCanvas, 0, 0);
+    
+        if (matchingPercentage >= requiredMatchingPercentage) {
+            showCongratulationsPage('next');
+        }
+    }
+    
+       
+
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
-
-    // Touch events for mobile devices
+    canvas.addEventListener('mouseleave', stopDrawing);
     canvas.addEventListener('touchstart', startDrawing);
     canvas.addEventListener('touchmove', draw);
     canvas.addEventListener('touchend', stopDrawing);
 
-    // Initial maze load
-    if (!introVideo.paused) {
-        introVideo.play();
-    } else {
-        showMaze();
-    }
+    // Key bindings for navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+            prevMaze();
+        } else if (e.key === 'ArrowRight') {
+            nextMaze();
+        }
+    });
 };
