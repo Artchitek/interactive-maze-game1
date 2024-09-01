@@ -255,7 +255,22 @@ window.onload = function() {
     function checkCompletion() {
         if (!referenceImage.complete) return;
     
+        // Capture the user's drawn path from the canvas
         const userImageData = offScreenCtx.getImageData(0, 0, offScreenCanvas.width, offScreenCanvas.height);
+        
+        // Log the first few pixels of the user's path to verify
+        console.log('User Image Data (first 100 pixels):', userImageData.data.slice(0, 100));
+    
+        // Visualize the captured user path by drawing it onto a new canvas
+        const debugCanvas = document.createElement('canvas');
+        debugCanvas.width = offScreenCanvas.width;
+        debugCanvas.height = offScreenCanvas.height;
+        const debugCtx = debugCanvas.getContext('2d');
+        debugCtx.putImageData(userImageData, 0, 0);
+    
+        // Append the debug canvas to the document body for visual inspection
+        document.body.appendChild(debugCanvas);
+    
         const referenceCtx = document.createElement('canvas').getContext('2d');
         referenceCtx.canvas.width = referenceImage.width;
         referenceCtx.canvas.height = referenceImage.height;
@@ -264,13 +279,7 @@ window.onload = function() {
     
         let matchingPathPixels = 0;
         let totalPathPixels = 0;
-        const requiredMatchingPercentage = 20; // Lower this for testing, if necessary
-    
-        const debugCanvas = document.createElement('canvas');
-        debugCanvas.width = offScreenCanvas.width;
-        debugCanvas.height = offScreenCanvas.height;
-        const debugCtx = debugCanvas.getContext('2d');
-        debugCtx.drawImage(referenceImage, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
+        const requiredMatchingPercentage = 90; // Minimum percentage of correct path required to be marked as complete
     
         for (let i = 0; i < referenceImageData.data.length; i += 4) {
             const refR = referenceImageData.data[i];
@@ -288,13 +297,15 @@ window.onload = function() {
     
                 if (
                     userA !== 0 && // User drew on this pixel
-                    Math.abs(userR - refR) < 100 && // Increase tolerance
-                    Math.abs(userG - refG) < 100 &&
-                    Math.abs(userB - refB) < 100
+                    Math.abs(userR - refR) < 50 && // Allow some color tolerance
+                    Math.abs(userG - refG) < 50 &&
+                    Math.abs(userB - refB) < 50
                 ) {
                     matchingPathPixels++;
+                    // Mark correct pixel with green on the debug canvas
                     debugCtx.fillStyle = 'rgba(0, 255, 0, 0.5)'; // Green
                 } else {
+                    // Mark incorrect pixel with red on the debug canvas
                     debugCtx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Red
                 }
                 const x = (i / 4) % offScreenCanvas.width;
@@ -304,16 +315,15 @@ window.onload = function() {
         }
     
         const matchingPercentage = (matchingPathPixels / totalPathPixels) * 100;
-        console.log('Matching Path Pixels:', matchingPathPixels);
-        console.log('Total Path Pixels:', totalPathPixels);
-        console.log('Matching Percentage:', matchingPercentage);
     
+        // Display the debug canvas on top of the existing canvas for visualization
         offScreenCtx.drawImage(debugCanvas, 0, 0);
     
         if (matchingPercentage >= requiredMatchingPercentage) {
             showCongratulationsPage('next');
         }
     }
+    
     
     
     canvas.addEventListener('mousedown', startDrawing);
