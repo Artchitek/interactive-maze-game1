@@ -264,9 +264,8 @@ window.onload = function() {
     
         let matchingPathPixels = 0;
         let totalPathPixels = 0;
-        const requiredMatchingPercentage = 90; // Minimum percentage of correct path required to be marked as complete
+        const requiredMatchingPercentage = 90; // Lower this for testing, if necessary
     
-        // Create a canvas context for visual debugging
         const debugCanvas = document.createElement('canvas');
         debugCanvas.width = offScreenCanvas.width;
         debugCanvas.height = offScreenCanvas.height;
@@ -289,15 +288,13 @@ window.onload = function() {
     
                 if (
                     userA !== 0 && // User drew on this pixel
-                    Math.abs(userR - refR) < 50 && // Allow some color tolerance
-                    Math.abs(userG - refG) < 50 &&
-                    Math.abs(userB - refB) < 50
+                    Math.abs(userR - refR) < 100 && // Increase tolerance
+                    Math.abs(userG - refG) < 100 &&
+                    Math.abs(userB - refB) < 100
                 ) {
                     matchingPathPixels++;
-                    // Mark correct pixel with green on the debug canvas
                     debugCtx.fillStyle = 'rgba(0, 255, 0, 0.5)'; // Green
                 } else {
-                    // Mark incorrect pixel with red on the debug canvas
                     debugCtx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Red
                 }
                 const x = (i / 4) % offScreenCanvas.width;
@@ -307,8 +304,10 @@ window.onload = function() {
         }
     
         const matchingPercentage = (matchingPathPixels / totalPathPixels) * 100;
+        console.log('Matching Path Pixels:', matchingPathPixels);
+        console.log('Total Path Pixels:', totalPathPixels);
+        console.log('Matching Percentage:', matchingPercentage);
     
-        // Display the debug canvas on top of the existing canvas for visualization
         offScreenCtx.drawImage(debugCanvas, 0, 0);
     
         if (matchingPercentage >= requiredMatchingPercentage) {
@@ -316,8 +315,7 @@ window.onload = function() {
         }
     }
     
-       
-
+    
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
