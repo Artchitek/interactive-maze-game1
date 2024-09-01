@@ -21,8 +21,8 @@ window.onload = function() {
         'Images/maze1.png',
         'Images/maze2.jpg',
         'Images/maze3.jpg',
-        'Images/maze4.png',
-        'Images/maze5.png'
+        'Images/maze4.jpg',
+        'Images/maze5.jpg'
     ];
 
     // Fullscreen maze images array
