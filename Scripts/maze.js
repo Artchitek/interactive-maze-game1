@@ -20,7 +20,7 @@ window.onload = function() {
     const mazeImages = [
         'Images/maze1.png',
         'Images/maze2.jpg',
-        'Images/maze3.png',
+        'Images/maze3.jpg',
         'Images/maze4.png',
         'Images/maze5.png'
     ];
@@ -37,10 +37,10 @@ window.onload = function() {
     // Reference images for correct paths
     const referenceImages = [
         'Images/correctPath1.png',
-        'Images/correctPath1.png',
-        'Images/correctPath1.png',
-        'Images/correctPath1.png',
-        'Images/correctPath1.png'
+        'Images/correctPath2.png',
+        'Images/correctPath3.png',
+        'Images/correctPath4.png',
+        'Images/correctPath5.png'
     ];
 
     const mazeImage = new Image();
