@@ -279,7 +279,7 @@ window.onload = function() {
     
         let matchingPathPixels = 0;
         let totalPathPixels = 0;
-        const requiredMatchingPercentage = 90; // Minimum percentage of correct path required to be marked as complete
+        const requiredMatchingPercentage = 20; // Minimum percentage of correct path required to be marked as complete
     
         for (let i = 0; i < referenceImageData.data.length; i += 4) {
             const refR = referenceImageData.data[i];
@@ -297,9 +297,9 @@ window.onload = function() {
     
                 if (
                     userA !== 0 && // User drew on this pixel
-                    Math.abs(userR - refR) < 50 && // Allow some color tolerance
-                    Math.abs(userG - refG) < 50 &&
-                    Math.abs(userB - refB) < 50
+                    Math.abs(userR - refR) < 100 && // Allow some color tolerance
+                    Math.abs(userG - refG) < 100 &&
+                    Math.abs(userB - refB) < 100
                 ) {
                     matchingPathPixels++;
                     // Mark correct pixel with green on the debug canvas
