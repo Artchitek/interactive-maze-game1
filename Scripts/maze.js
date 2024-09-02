@@ -18,7 +18,7 @@ window.onload = function() {
 
     // Maze images array
     const mazeImages = [
-        'Images/maze1.png',
+        'Images/maze1.jpg',
         'Images/maze2.jpg',
         'Images/maze3.jpg',
         'Images/maze4.jpg',
